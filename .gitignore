@@ -1,8 +1,10 @@
-#Latexmk output
+# JSON files
+.jl
+
+# Latexmk & vim output
 *.aux
 *.fdb_latexmk
 *.fls
 *.log
 *.out
 *.swp
-IEEETrans/*
