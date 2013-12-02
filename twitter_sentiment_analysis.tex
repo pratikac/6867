@@ -1,0 +1,107 @@
+\documentclass[conference]{IEEETrans/IEEEtran}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,commath,mathtools} % AMS Math and extensions
+\usepackage{enumerate} % Styles for counters
+\usepackage{stmaryrd} % CS Symbols
+\usepackage{bm} % Bold math symbols
+\usepackage{cancel} % Cancel math expressions
+\usepackage{graphicx} % Importing graphics
+\usepackage{epstopdf} % Importing .eps images
+\usepackage{placeins} % Keep floats in their place
+\usepackage{relsize} % Adjust math expression sizes
+\usepackage{tikz} % TikZ drawing library
+\usepackage{url,hyperref} % Hyperlinks
+\usepackage{fixltx2e} % Text subscripts
+\usepackage{mathrsfs} % math script
+
+%% Definitions
+
+%% Macros for commonly used symbols
+\newcommand{\mos} {\texorpdfstring{MoS\textsubscript{2} }{MoS2 }}
+
+
+%% Fonts
+%\usepackage{fourier}
+
+%\usepackage{cmbright}
+
+%\usepackage{ccfonts, eulervm} 
+%\usepackage[T1]{fontenc}
+
+%\usepackage{ccfonts} 
+%\usepackage[T1]{fontenc}
+
+%\usepackage[math]{iwona}
+
+%\usepackage{mathpazo}
+
+
+%% Document starts here
+\begin{document}
+ 
+\title{Twitter-based Mood Evaluation}
+\author{
+    \IEEEauthorblockN{Vishnu Sresht}
+    \IEEEauthorblockA{Email: vishnusr@mit.edu}
+    \and
+    \IEEEauthorblockN{Pratik Chaudhari}
+    \IEEEauthorblockA{Email: pratikac@mit.edu}
+}
+\maketitle
+
+\begin{abstract}
+    By providing a convenient, readily-accessible way to reach out to a global audience, twitter has revolutionized the way we broadcast our feelings to the rest of the world. In addition to its empowerment of the diva within us all, Twitter's meteoric rise in popularity has enabled every one of us to listen to the voices of millions and comprehend mankind's \textit{zeitgest} at an uprecedented resolution. However, the deluge of verbiage unleashed by Twitter's ubiquitous usage must be tamed before its wealth of information can be exploited for sociologically-beneficial research. In this project, we attempt to survey, compare and contrast machine learning techniques for one particular form of large-scale tweet analysis - that of determining `how positive people feel' at any given moment through the sentiment analysis of their tweets. To this end, we also introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. In this paper, we intend to study the relative efficacies of several commonly employed classification algorithms, including Naive Bayes, Support Vector Machines, and K-Nearest Neighbor classifiers when applied to the task of of detecting the mood of the nation on a real-time basis.
+\end{abstract}
+
+\section{Introduction}
+Kramer's theory provides a precise mathematical formulation and solution to a
+problem that recurs in various forms in several branches of the physical
+sciences: that of determining the kinetics of stochastically motivated barrier
+crossing. The simplest version of this problem deals with determing the average
+amount of time needed by a particle to surmount an energy barrier through
+thermal agitation.
+
+Kramer's theory provides a precise mathematical formulation and solution to a
+problem that recurs in various forms in several branches of the physical
+sciences: that of determining the kinetics of stochastically motivated barrier
+crossing. The simplest version of this problem deals with determing the average
+amount of time needed by a particle to surmount an energy barrier through
+thermal agitation.
+
+Given pairs of \mos sheets with inter-sheet interaction energy
+$\Phi\left(z\right)$, we would like to determine the rate at which pairs
+transition from the metastable dispersed configuration to the stable
+agglomerated configuration.  
+
+In the limit of high viscous drag, the relative stochastic motion of two \mos
+plates under the influence of the field $\Phi(z)$ is described by the following
+PDE:
+
+\begin{equation}
+    \frac{\dif z}{\dif t} = -\mathcal{D} \frac{\partial }{\partial z}\beta \Phi(z) + \sqrt{2\mathcal{D}}\xi(t)
+\end{equation}
+where $\mathcal{D}$ is the diffusivity of the sheets in the surrounding medium,
+$\beta$ is the inverse temperature $(k_BT)^{-1}$, and $\xi(t)$ corresponds to stochastic disturbances arising out
+of brownian motion and satisfies $\langle \xi(t) \xi(t') \rangle = \delta(t -
+t')$. 
+
+This PDE in terms of $z(t)$ can be written in terms of the probability $P(z,t)$ of finding the sheets at a separation $z$, at time $t$: 
+\begin{equation}
+    \frac{\partial}{\partial t} P(z) = \mathcal{D} \frac{\partial}{\partial z} \left[ \frac{\partial}{\partial z}\beta \Phi(z) + \frac{\partial}{\partial z}\right] P(z)
+\end{equation}
+
+We could write Newton's second law for the pair of plates
+\begin{align}
+    M\ddot{z}             &= F_{\text{total}} \nonumber \\
+                          &= F_{\text{PMF}} + F_{\text{viscous}} + F_{\text{brownian}} \nonumber \\
+    \Rightarrow M\ddot{z} &= -\frac{\partial}{\partial z} \phi(z) - \zeta \frac{\dif x}{\dif t} + \xi(t)
+\end{align}
+Note that the term $ F_{\text{viscous}}$ corresponds to the viscous resistance or linear drag that is experienced by bodies moving slowly through viscous media where the Reynolds number, $R_e < 1$.
+This leads us to the Langevin equations for the dynamics of the system in terms of the intersheet separation $z$:
+\begin{align}
+    \dot{z} &= v \nonumber \\
+    \dot{v} &= - \frac{1}{M} \frac{\partial}{\partial z} \phi(z) - \frac{\zeta}{M} v + \frac{1}{M} \xi(t)
+\end{align}
+Over the time scale of the aggregation process, we expect the \mos sheets to sample all possible relative orientations. Consequently, these sheets can be modeled as spheres with an equivalent hydrodynamic radius of $R_d = \sqrt{A/\pi}$.
+
+\end{document}
