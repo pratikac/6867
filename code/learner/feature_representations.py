@@ -1,11 +1,10 @@
 """
     Class definitions for feature extractors
 """
-import json, pdb
+import json
 import operator
 from math import copysign
 from math import log
-from collections import Counter
 
 def plog2p(x):
     if x <= 0:
@@ -26,9 +25,8 @@ def uniqify(seq, idfun=None):
         result.append(item)
     return result
 
-'''
 class WordFrequency:
-    def __init__(self, nDim=200, fMin=4, includeBigrams=False):
+    def __init__(self, nDim=10000, fMin=4, includeBigrams=False):
         self.snippetFileName = ''
         self.nGramList = []
         self.nGramDictionary = {}
@@ -41,19 +39,28 @@ class WordFrequency:
         self.snippetFileName = snippetFileName
 
     def generate_nGram_list(self):
-        big_list = []
+        nGram_dictionary = {}
+
         with open(self.snippetFileName, 'r') as snippetFile:
             for line in snippetFile:
                 snippet = json.loads(line)
-                print snippet['unigramList']
-                pdb.set_trace()
-                big_list + snippet['unigramList']
-                if self.includeBigrams:
-                    big_list + snippet['bigramList']
 
-        # Check unigrams with nGramList
-        nGram_dictionary = Counter(big_list)
+
+                # Check unigrams with nGramList
+                for unigram in snippet['unigramList']:
+                    if unigram in nGram_dictionary.keys():
+                        nGram_dictionary[unigram] += 1
+                    else:
+                        nGram_dictionary[unigram] = 1
                 
+                # Check bigrams with nGramList
+                if self.includeBigrams:
+                    for bigram in snippet['bigramList']:
+                        if bigram in nGram_dictionary.keys():
+                            nGram_dictionary[bigram] += 1
+                        else:
+                            nGram_dictionary[bigram] = 1
+            
         # Prune nGramList
         self.nGramDictionary = nGram_dictionary.copy()
         self.maxFeatures = len(self.nGramDictionary.keys())
@@ -78,18 +85,7 @@ class WordFrequency:
 
                 fVectorData['f_vector'] = f_vector
                 outFile.write(json.dumps(fVectorData)+"\n")
-'''
-class word_freq():
-    def __init__(self, dim=200):
-        self.dim = dim
-        self.snippet_name = ''
-    
-    def read_json(snippet_name):
-        self.snippet_name = snippet_name
-
-    def get_ngrams(self):
-        
-
+                
 
 class WordPresence(WordFrequency):
     """
