@@ -19,3 +19,14 @@ if sys.argv[1] == 'WordPresence':
     featureExtractor.readJSON(snippet_file_name)
     featureExtractor.gen_f_vectors(feature_file_name)
 
+# Word frequency based on information gain
+if sys.argv[1] == 'InformationGain':
+    featureExtractor = feature_representations.InformationGain()
+    featureExtractor.readJSON(snippet_file_name)
+    featureExtractor.gen_f_vectors(feature_file_name)
+
+# Word frequency based on gain ratio
+if sys.argv[1] == 'GainRatio':
+    featureExtractor = feature_representations.GainRatio()
+    featureExtractor.readJSON(snippet_file_name)
+    featureExtractor.gen_f_vectors(feature_file_name)
