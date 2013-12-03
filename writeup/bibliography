@@ -1,0 +1,40 @@
+@article{kang2012senti,
+  title={Senti-lexicon and improved Na{\"\i}ve Bayes algorithms for sentiment analysis of restaurant reviews},
+  author={Kang, Hanhoon and Yoo, Seong Joon and Han, Dongil},
+  journal={Expert Systems with Applications},
+  volume={39},
+  number={5},
+  pages={6000--6010},
+  year={2012},
+  publisher={Pergamon}
+}
+@inproceedings{pang2004sentimental,
+  title={A sentimental education: Sentiment analysis using subjectivity summarization based on minimum cuts},
+  author={Pang, Bo and Lee, Lillian},
+  booktitle={Proceedings of the 42nd annual meeting on Association for Computational Linguistics},
+  pages={271},
+  year={2004},
+  organization={Association for Computational Linguistics}
+}
+@inproceedings{pak2010twitter,
+  title={Twitter as a Corpus for Sentiment Analysis and Opinion Mining.},
+  author={Pak, Alexander and Paroubek, Patrick},
+  booktitle={LREC},
+  year={2010}
+}
+@inproceedings{pang2002thumbs,
+  title={Thumbs up?: sentiment classification using machine learning techniques},
+  author={Pang, Bo and Lee, Lillian and Vaithyanathan, Shivakumar},
+  booktitle={Proceedings of the ACL-02 conference on Empirical methods in natural language processing-Volume 10},
+  pages={79--86},
+  year={2002},
+  organization={Association for Computational Linguistics}
+}
+@inproceedings{sharma2012comparative,
+  title={A comparative study of feature selection and machine learning techniques for sentiment analysis},
+  author={Sharma, Anuj and Dey, Shubhamoy},
+  booktitle={Proceedings of the 2012 ACM Research in Applied Computation Symposium},
+  pages={1--7},
+  year={2012},
+  organization={ACM}
+}
