@@ -2,7 +2,12 @@
 # 
 
 PROJECT = sentiment_analysis
-TRAINING_DATA = snippets.jl
+# The feature selection method could be one of:
+# 	WordFrequency
+# 	WordPresence
+FEATURE_SELECTION = WordFrequency
+
+TRAINING_DATA = training_data.jl
 POSITIVE_SITES = bitchySites/LML.jl bitchySites/MLIG.jl
 NEGATIVE_SITES = bitchySites/FML.jl
 SCRAPED_SNIPPETS = bitchySites/FML.jl bitchySites/LML.jl bitchySites/MLIA.jl bitchySites/MLIG.jl
@@ -11,12 +16,13 @@ all: $(PROJECT)
 
 $(PROJECT): $(TRAINING_DATA)
 
-snippets: snippets.jl
+$(TRAINING_DATA): snippets.jl
+	python extract_features.py $(FEATURE_SELECTION)
 
 snippets.jl: positive.jl negative.jl
 	cat $? >> snippets.jl &&\
-	sort -u positive.jl > positive_uniq.jl &&\
-	mv positive_uniq.jl positive.jl
+	sort -u snippets.jl > snippets_uniq.jl &&\
+	mv snippets_uniq.jl snippets.jl
 
 positive.jl: $(POSITIVE_SITES)
 	python organize_training_data.py $(subst bitchySites/,,$(subst .jl,,$?)) &&\
@@ -52,6 +58,9 @@ scrape_all:
 	python scrapeTrainingData.py &&\
 	sort -u LML.jl > LML_uniq.jl &&\
 	mv LML_uniq.jl LML.jl 
+
+clean:
+	rm -f training_data.jl
 
 clean_snippets:
 	rm -f bitchySites/*.jl 
