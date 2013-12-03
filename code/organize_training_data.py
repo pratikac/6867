@@ -6,11 +6,16 @@
 
 import simplejson as json
 from math import sqrt
+from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
+import nltk
 import sys
+import pdb
 
-
+sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+word_tokenizer = RegexpTokenizer('[a-zA-Z]{3,}')       # only pick out letters
+lmtzr = WordNetLemmatizer()
 
 # One sided confidence interval that the 'actual' score will be above the calcualted score
 
@@ -26,28 +31,22 @@ def calculate_score(upVotes, downVotes):
     predicted_score =  (P_hat+confidence*confidence/(2*nVotes)-confidence*sqrt((P_hat*(1-P_hat)+confidence*confidence/(4*nVotes))/nVotes))/(1+confidence*confidence/nVotes)
     return round(predicted_score, decimalFigures)
 
-
+'''
 def process_text(text):
     # Tokenize ONLY alphabetic sequences 
     wordTokenizer = RegexpTokenizer('[a-zA-Z]+')    # only pick out letters
     longWordTokenizer = RegexpTokenizer('[a-zA-Z]{3,}') #  > 2 letters 
     lmtzr = WordNetLemmatizer()
 
-    # Lemmatize words in the word list 
-    wordList = [lmtzr.lemmatize(word.lower()) for word in wordTokenizer.tokenize(text)]
-    longWordList = [lmtzr.lemmatize(word.lower()) for word in longWordTokenizer.tokenize(text)]
+    # 1. tokanize, remove stop words
+    remove_stop_words = lambda x: if x not in stopwords.words('english')
+    short_text = filter(remove_stop_words, wordTokenizer.tokenize(text))
+    long_text = filter(remove_stop_words, longWordTokenizer.tokenize(text))
 
-    # Clean up after lemmatization - is there a more efficient way? 
-    for wordNo, word in enumerate(wordList):
-        # 'was' becomes 'wa' after lemmatization
-        if word == 'wa':
-            wordList[wordNo] = 'was'
-
-    for wordNo, word in enumerate(longWordList):
-        # 'was' becomes 'wa' after lemmatization
-        if word == 'wa':
-            longWordList[wordNo] = 'was'
-
+    # 2. lematize words
+    wordList = [lmtzr.lemmatize(word.lower()) for word in wordTokenizer.tokenize(short_text)]
+    longWordList = [lmtzr.lemmatize(word.lower()) for word in longWordTokenizer.tokenize(long_text)]
+    
     # Generate unigram  and bigram lists
     unigram_list = longWordList
 
@@ -56,7 +55,25 @@ def process_text(text):
         bigram_list.append(wordList[wordNo]+' '+wordList[wordNo+1])
 
     return (sorted(unigram_list), sorted(bigram_list))
+'''
 
+def process_text(text):
+    pos_tagger = nltk.pos_tag
+    simplify_tag = nltk.tag.simplify.simplify_wsj_tag
+    sentences = sent_tokenizer.tokenize(text)
+    remove_stop_words = lambda x: (x not in stopwords.words('english')) and (x != 'fml') and (x!='lml') and (x!='mlig')
+    keep_only_nouns_verbs = lambda x: x[1] == 'NN' or x[1] == 'VB'
+    convert_to_lemmatize_format = lambda x: (x[0],'n') if x[1] == 'N' else (x[0],'v')
+    word_list = set()
+    for s in sentences:
+        words = word_tokenizer.tokenize(s)
+        words = filter(remove_stop_words, words)
+        words_n_pos = filter(keep_only_nouns_verbs, pos_tagger(words))
+        words_n_pos = [(w, simplify_tag(pos)) for w, pos in words_n_pos]
+        words_n_pos = map(convert_to_lemmatize_format, words_n_pos)
+        word_list.update(set(map(lambda wp: lmtzr.lemmatize(wp[0].lower(), wp[1]), words_n_pos)))
+   
+    return (sorted(list(word_list)), [])
 
 def process_snippet(sourceName):
     positiveSources = ['LML', 'MLIG']
