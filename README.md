@@ -85,8 +85,10 @@ This algorithm calculates the lower bound of one-sided interval within which we
 can claim (with a given confidence) that the true value of (positive
 votes)/(total votes) lies. One of the key assumptions involved in scoring the snippets this way is that 'value' of one vote is the same across the different source sites. 
 
-
 The output of this step comprises two JSON files `positive.jl` and `negative.jl` that contain pre-processed positive and negative snippets respectively.
 
 ## Feature selection
+We have implemented the following methods of feature selection:
+
+1. _Document Frequency_: We select the top `nDim` n-grams that occur the most frequently across all snippets in the training set (with or without an added minimum frequency cutoff `fMin`). Each snippet is then assigned a feature vector with `nDim` elements representing the frequencies of appearences of each of these n-grams.
 

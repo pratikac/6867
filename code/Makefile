@@ -2,22 +2,28 @@
 # 
 
 PROJECT = sentiment_analysis
-TRAINING_DATA = positive.jl negative.jl 
-POSITIVE_SNIPPETS = bitchySites/LML.jl bitchySites/MLIG.jl
-NEGATIVE_SNIPPETS = bitchySites/FML.jl
+TRAINING_DATA = snippets.jl
+POSITIVE_SITES = bitchySites/LML.jl bitchySites/MLIG.jl
+NEGATIVE_SITES = bitchySites/FML.jl
 SCRAPED_SNIPPETS = bitchySites/FML.jl bitchySites/LML.jl bitchySites/MLIA.jl bitchySites/MLIG.jl
 
 all: $(PROJECT)
 
 $(PROJECT): $(TRAINING_DATA)
-#$(PROJECT): $(POSITIVE_SNIPPETS) $(NEGATIVE_SNIPPETS)
 
-positive.jl: $(POSITIVE_SNIPPETS)
+snippets: snippets.jl
+
+snippets.jl: positive.jl negative.jl
+	cat $? >> snippets.jl &&\
+	sort -u positive.jl > positive_uniq.jl &&\
+	mv positive_uniq.jl positive.jl
+
+positive.jl: $(POSITIVE_SITES)
 	python organize_training_data.py $(subst bitchySites/,,$(subst .jl,,$?)) &&\
 	sort -u positive.jl > positive_uniq.jl &&\
 	mv positive_uniq.jl positive.jl
 	
-negative.jl: $(NEGATIVE_SNIPPETS)
+negative.jl: $(NEGATIVE_SITES)
 	python organize_training_data.py $(subst bitchySites/,,$(subst .jl,,$?)) &&\
 	sort -u negative.jl > negative_uniq.jl &&\
 	mv negative_uniq.jl negative.jl
