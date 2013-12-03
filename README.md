@@ -90,5 +90,8 @@ The output of this step comprises two JSON files `positive.jl` and `negative.jl`
 ## Feature selection
 We have implemented the following methods of feature selection:
 
-1. _Document Frequency_: We select the top `nDim` n-grams that occur the most frequently across all snippets in the training set (with or without an added minimum frequency cutoff `fMin`). Each snippet is then assigned a feature vector with `nDim` elements representing the frequencies of appearences of each of these n-grams.
+1. _Word Frequency_: We select the top `nDim` n-grams that occur the most frequently across all snippets in the training set (with or without an added minimum frequency cutoff `fMin`). Each snippet is then assigned a feature vector with `nDim` elements representing the frequencies of appearences of each of these n-grams.
+2. _Word Presence_:  Similar to _Word Frequency_, except that all values of the feature vector are either 0 (n-gram is absent) or 1 (n-gram is present).
+3. _Information Gain_: We quantify the amount of information every n-gram contributes towards the classification of the snippets in the training data and choose `nDim` ngrams that contribute the most information (and/or at least `IG_min` information) as our features.
+4. _Gain Ratio_: We normalize the information gain per n-gram by the intrinsic entropy of the n-gram in the corpus. We then choose the top `ndim` n-grams that have a gain ratio of at least `IG_min` as our features. As with the _Information Gain_ method, the feature vector counts the frequency of each chosen feature in a given snippet.
 

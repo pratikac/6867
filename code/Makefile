@@ -5,6 +5,8 @@ PROJECT = sentiment_analysis
 # The feature selection method could be one of:
 # 	WordFrequency
 # 	WordPresence
+# 	GainRatio
+# 	InformationGain
 FEATURE_SELECTION = WordFrequency
 
 TRAINING_DATA = training_data.jl
