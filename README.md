@@ -38,8 +38,10 @@ training examples used by [Pang and Lee
 The positive and negative snippets from these various sources are stored in two
 different JSON files (.jl format) `positive.jl` and `negative.jl`. Each record
 in these files consists of two fields:
+
 1. _'text'_ - containing the text of the post after suitable lemmatization and
    stemming; and
+
 2. _'score'_ - a postive or negative number (depending on the sentiment)
    indicating our confidence in the snippet's classification. 
 
