@@ -1,0 +1,36 @@
+\documentclass[10pt, letterpaper, conference, final, twocolumn]{ieeeconf}
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+
+\usepackage{mathpazo}
+\input{macros.tex}
+
+% save space
+\newcommand{\algsize}{\footnotesize}
+\setlength{\floatsep}{0.05in}
+\setlength{\textfloatsep}{0.1in}
+\setlength{\intextsep}{0.05in}
+\setlength{\belowcaptionskip}{0.01in}
+\setlength{\abovecaptionskip}{0.1in}
+\setlength{\abovedisplayskip}{0.08in}
+\setlength{\belowdisplayskip}{0.08in}
+
+
+\begin{document}
+\title{\bf Twitter-based Mood Evaluation
+	\thanks{$^*$Chemical Engingeering Department, MIT. Email: \href{mailto:vishnusr@mit.edu}{vishnusr@mit.edu}}
+	\thanks{$^\dag$Laboratory of Information and Decision Systems, MIT. Email: \href{mailto:pratikac@mit.edu}{pratikac@mit.edu}}
+}
+\author{Vishnu Sresht$^*$ \qquad Pratik Chaudhari$^\dag$}
+\maketitle
+
+\begin{abstract}
+By providing a convenient, readily-accessible way to reach out to a global audience, twitter has revolutionized the way we broadcast our feelings to the rest of the world. In addition to its empowerment of the diva within us all, Twitter's meteoric rise in popularity has enabled every one of us to listen to the voices of millions and comprehend mankind's \textit{zeitgest} at an uprecedented resolution. However, the deluge of verbiage unleashed by Twitter's ubiquitous usage must be tamed before its wealth of information can be exploited for sociologically-beneficial research. In this project, we attempt to survey, compare and contrast machine learning techniques for one particular form of large-scale tweet analysis - that of determining `how positive people feel' at any given moment through the sentiment analysis of their tweets. To this end, we also introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. In this paper, we intend to study the relative efficacies of several commonly employed classification algorithms, including Naive Bayes, Support Vector Machines, and K-Nearest Neighbor classifiers when applied to the task of of detecting the mood of the nation on a real-time basis.
+
+\end{abstract}
+
+\bibliography{writeup}
+\bibliographystyle{unsrt}
+
+\end{document}
+

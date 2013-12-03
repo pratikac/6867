@@ -1,0 +1,51 @@
+% packages
+\usepackage{amsmath, amsfonts, amssymb, bm, enumerate, url}%, flushend}
+\usepackage[boxruled, vlined, linesnumbered]{algorithm2e}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage[pdftex, xetex]{graphicx}
+\usepackage[font={small}]{caption}
+\usepackage{float, tabularx, multirow, subfig}
+\usepackage{pgf, tikz}
+\usetikzlibrary{arrows,automata}
+\usepackage[normalem]{ulem}
+
+\usepackage[bookmarks=true]{hyperref}
+\hypersetup{
+colorlinks=true, linkcolor=red, citecolor=blue, filecolor=magenta, urlcolor=blue
+%linkcolor=black, citecolor=black, filecolor=black, urlcolor=black
+}
+\usepackage{url, cite}
+
+% macros
+\providecommand{\abs}[1]{\ensuremath \left| #1 \right|}
+\providecommand{\norm}[1]{\ensuremath \lVert#1\rVert}
+\providecommand{\given}{\, \vert \,}
+\providecommand{\cal}[1]{\ensuremath \mathcal{#1}}
+\providecommand{\qed}{\hfill \mbox{\raggedright \rule{0.1in}{0.1in} } }
+
+\providecommand{\aeq}[1]{\begin{align} #1 \end{align}}
+\providecommand{\aeqs}[1]{\begin{align*} #1 \end{align*}}
+\providecommand{\beq}[1]{\begin{equation}#1\end{equation}}
+\providecommand{\beqs}[1]{\begin{equation*}#1\end{equation*}}
+\providecommand{\trm}[1]{\ensuremath \textrm{#1}}
+\providecommand{\enum}[2]{\begin{enumerate}[#1]{#2}\end{enumerate}}
+\providecommand{\ilist}[1]{\begin{itemize}{#1}\end{itemize}}
+\providecommand{\ag}[1]{\ensuremath \left\langle#1\right\rangle}
+\providecommand{\bee}{\begin{enumerate}}
+\providecommand{\eee}{\end{enumerate}}
+\providecommand{\bm}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\renewcommand{\given}{\ensuremath{\, \vert \,}}
+
+\usepackage{theorem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{problem}[theorem]{Problem}
+%\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{remark}[theorem]{Remark}
+%\theoremstyle{plain}
+\newtheorem{assumption}[theorem]{Assumption}
