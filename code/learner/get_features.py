@@ -74,15 +74,20 @@ class feature_vector():
     '''
     constructs a feature vector from word_freq data
     '''
-    def __init__(self):
-        pd = process_data(20, -1)
+    def __init__(self, dim, freq):
+        pd = process_data(dim, freq)
         
         self.features = []
         self.labels = []
+        self.int_to_eng_words = {}
 
         word_freq = pd.word_frequencies
         num_words = len(word_freq)
         word_to_index = dict(zip(word_freq.keys(), range(num_words)))
+        index_to_word = dict(zip(range(num_words), word_freq.keys()))
+        for index in range(num_words):
+            self.int_to_eng_words[index] = pd.int_to_word[index_to_word[index]]
+
         def get_bitmap(word_array):
             z = [0 for i in range(num_words)]
             for w in word_array:
@@ -92,3 +97,8 @@ class feature_vector():
         for dp in pd.data:
             self.features.append(get_bitmap(dp[0]))
             self.labels.append(dp[1])
+
+        def get_word_array_from_bitmap(bit_array):
+            l = len(bit_array)
+            which = [i in xrange(l) if bit_array[i] > 0]
+            return [self.int_to_eng_words[wi] for wi in which]
