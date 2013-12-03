@@ -11,6 +11,7 @@
 *.pdf
 
 # python
+*.pyc
 **/*.pyc
 
 # my personal paranoia induced backup
