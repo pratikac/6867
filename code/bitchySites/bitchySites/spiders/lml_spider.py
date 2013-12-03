@@ -8,7 +8,7 @@ from scrapy.selector import Selector
 from bitchySites.items import LMLSnippet
 
 class LMLSpider(BaseSpider):
-    name = "lml"
+    name = "LML"
     allowed_domains = ["web.archive.org"]
     urlPrefixes = ["https://web.archive.org/web/20110104112408/http://www.lmylife.com/?page=",
             "https://web.archive.org/web/20110104112408/http://www.lmylife.com/?sort=agree&page=",

@@ -7,7 +7,7 @@ from scrapy.selector import Selector
 from bitchySites.items import FMLSnippet
 
 class FMLSpider(BaseSpider):
-    name = "fml"
+    name = "FML"
     allowed_domains = ["fmylife.com"]
     urlPrefix = "http://fmylife.com/tops/top?page="
     maxPages = 99 # Page numbers start with 0 at FML, 99 chosen arbitrarily
