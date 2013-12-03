@@ -46,7 +46,7 @@ in these files consists of two fields:
    indicating our confidence in the snippet's classification. 
 
 ### Tokenization, Screening and Stemming
-**Tokenization** In this step we identify the basic lexicon from which feature
+In this step we identify the basic lexicon from which feature
 vectors may be constructed. A review of a number of sources including [Kang et
 al., (2011)](dx.doi.org/10.1016/j.eswa.2011.11.107) and [Pak and Paroubek
 (2010)](http://goo.gl/MM7Fe0) have used either only unigrams or a combination
