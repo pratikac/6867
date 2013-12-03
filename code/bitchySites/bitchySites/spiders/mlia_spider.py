@@ -7,7 +7,7 @@ from scrapy.selector import Selector
 from bitchySites.items import MLIASnippet
 
 class MLIASpider(BaseSpider):
-    name = "mlia"
+    name = "MLIA"
     allowed_domains = ["mylifeisaverage.com"]
     urlPrefix = "http://mylifeisaverage.com/"
     maxPages = 99 # Arbitrary (1-indexed) page number at MLIA < 11081

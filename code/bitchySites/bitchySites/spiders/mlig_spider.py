@@ -7,7 +7,7 @@ from scrapy.selector import Selector
 from bitchySites.items import MLIGSnippet
 
 class MLIGSpider(BaseSpider):
-    name = "mlig"
+    name = "MLIG"
     allowed_domains = ["mylifeisg.com"]
     urlPrefix = "http://mylifeisg.com/"
     maxPages = 60 # Max (1-indexed) page number at MLIG

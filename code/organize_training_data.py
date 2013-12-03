@@ -8,25 +8,30 @@ import simplejson as json
 from math import sqrt
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
+import sys
 
-lmtzr = WordNetLemmatizer()
+
 
 # One sided confidence interval that the 'actual' score will be above the calcualted score
-CONFIDENCE = 1.645        # use 1.0 for a confidence of 85%, 1.645 for 95%
 
-def calculate_score(upVotes, downVotes, confidence):
+def calculate_score(upVotes, downVotes):
     nVotes = upVotes + downVotes
     if nVotes == 0:
         return 0
 
+    confidence = 1.645        # use 1.0 for a confidence of 85%, 1.645 for 95%
+    decimalFigures = 4   # report score to 4 decimal places
+
     P_hat = float(upVotes)/nVotes
-    return (P_hat+confidence*confidence/(2*nVotes)-confidence*sqrt((P_hat*(1-P_hat)+confidence*confidence/(4*nVotes))/nVotes))/(1+confidence*confidence/nVotes)
+    predicted_score =  (P_hat+confidence*confidence/(2*nVotes)-confidence*sqrt((P_hat*(1-P_hat)+confidence*confidence/(4*nVotes))/nVotes))/(1+confidence*confidence/nVotes)
+    return round(predicted_score, decimalFigures)
 
 
 def process_text(text):
     # Tokenize ONLY alphabetic sequences 
-    wordTokenizer = RegexpTokenizer('\w+')
-    longWordTokenizer = RegexpTokenizer('\w{3,}')   # words with > 2 letters 
+    wordTokenizer = RegexpTokenizer('[a-zA-Z]+')    # only pick out letters
+    longWordTokenizer = RegexpTokenizer('[a-zA-Z]{3,}') #  > 2 letters 
+    lmtzr = WordNetLemmatizer()
 
     # Lemmatize words in the word list 
     wordList = [lmtzr.lemmatize(word.lower()) for word in wordTokenizer.tokenize(text)]
@@ -53,20 +58,22 @@ def process_text(text):
     return (sorted(unigram_list), sorted(bigram_list))
 
 
-FML_file = 'bitchySites/FML.jl'
-MLIG_file = 'bitchySites/MLIG.jl'
-LML_file = 'bitchySites/LML.jl'
-MLIA_file = 'bitchySites/MLIA.jl'
+def process_snippet(sourceName):
+    positiveSources = ['LML', 'MLIG']
+    negativeSources = ['FML']
 
-positive_file = 'positive.jl'
-negative_file = 'negative.jl'
+    if sourceName in negativeSources:
+        scoreSign = (-1.0)
+        output_file = 'negative.jl'
+    elif sourceName in positiveSources:
+        scoreSign = (1.0)
+        output_file = 'positive.jl'
+    else:
+        print "Snippet source not in list of sources!"
+        return
 
-positiveSources = ['LML', 'MLIG']
-negativeSources = ['FML']
-
-# Process NEGATIVE sources
-with open(negative_file, 'w') as outFile:
-    for sourceName in negativeSources:
+    # Append snippets to output file
+    with open(output_file, 'a') as outFile:
         scrapedFile = 'bitchySites/' + sourceName + '.jl' 
         print "Processing snippets from " + sourceName
         with open(scrapedFile, 'r') as jsonFile:
@@ -76,26 +83,15 @@ with open(negative_file, 'w') as outFile:
                 # Snippet processing
                 unigramList, bigramList = process_text(snippet['text'])
                 # Assign a NEGATIVE score
-                score = (-1) * calculate_score(snippet['upVotes'], snippet['downVotes'], CONFIDENCE) 
+                score = scoreSign * calculate_score(snippet['upVotes'], snippet['downVotes']) 
                 snippetData = {'unigramList': unigramList, 'bigramList': bigramList, 'score': score, 'ID': sourceName+'_'+str(snippet['snippetID'])}
                 outFile.write(json.dumps(snippetData)+"\n")
 
-
-# Process POSITIVE sources
-with open(positive_file, 'w') as outFile:
-    for sourceName in positiveSources:
-        scrapedFile = 'bitchySites/' + sourceName + '.jl' 
-        print "Processing snippets from " + sourceName
-        with open(scrapedFile, 'r') as jsonFile:
-            for line in jsonFile:
-                snippet = json.loads(line)
-
-                # Snippet processing
-                unigramList, bigramList = process_text(snippet['text'])
-                # Assign a POSITIVE score
-                score = (1) * calculate_score(snippet['upVotes'], snippet['downVotes'], CONFIDENCE) 
-                snippetData = {'unigramList': unigramList, 'bigramList': bigramList, 'score': score, 'ID': sourceName+'_'+str(snippet['snippetID'])}
-                outFile.write(json.dumps(snippetData)+"\n")
+    print "Done!"
 
 
-print "Done!"
+if __name__ == "__main__":
+    for source_name in sys.argv[1:]:
+        process_snippet(source_name)
+
+
