@@ -1,5 +1,5 @@
 # JSON files
-.jl
+*.jl
 
 # Latexmk & vim output
 *.aux
@@ -8,6 +8,10 @@
 *.log
 *.out
 *.swp
+*.pdf
 
 # python
-*.pyc
+**/*.pyc
+
+# my personal paranoia induced backup
+Code_backup/
