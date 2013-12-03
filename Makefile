@@ -19,6 +19,6 @@ $(PROJECT): $(TRAINING_DATA)
 
 
 clean:
-	rm bitchySites/*.jl
+	rm -f bitchySites/*.jl 
 
 fromscratch: clean all
