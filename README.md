@@ -86,5 +86,7 @@ can claim (with a given confidence) that the true value of (positive
 votes)/(total votes) lies. One of the key assumptions involved in scoring the snippets this way is that 'value' of one vote is the same across the different source sites. 
 
 
+The output of this step comprises two JSON files `positive.jl` and `negative.jl` that contain pre-processed positive and negative snippets respectively.
+
 ## Feature selection
 
