@@ -6,7 +6,7 @@
 
 import simplejson as json
 from math import sqrt
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, wordnet
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
 import nltk
@@ -59,20 +59,19 @@ def process_text(text):
 
 def process_text(text):
     pos_tagger = nltk.pos_tag
-    simplify_tag = nltk.tag.simplify.simplify_wsj_tag
     sentences = sent_tokenizer.tokenize(text)
+    lemmatizer_format = {'NN':'n', 'JJ':'a','VBD':'v'}
     remove_stop_words = lambda x: (x not in stopwords.words('english')) and (x != 'fml') and (x!='lml') and (x!='mlig')
-    keep_only_nouns_verbs = lambda x: x[1] == 'NN' or x[1] == 'VB'
-    convert_to_lemmatize_format = lambda x: (x[0],'n') if x[1] == 'N' else (x[0],'v')
+    keep_only_useful_pos = lambda x: x[1] in lemmatizer_format.keys()
+    convert_to_lemmatize_format = lambda x: (x[0], lemmatizer_format[x[1]]) 
     word_list = set()
-    for s in sentences:
-        words = word_tokenizer.tokenize(s)
+    for sent in sentences:
+        words = word_tokenizer.tokenize(sent)
         words = filter(remove_stop_words, words)
-        words_n_pos = filter(keep_only_nouns_verbs, pos_tagger(words))
-        words_n_pos = [(w, simplify_tag(pos)) for w, pos in words_n_pos]
+        words_n_pos = filter(keep_only_useful_pos, pos_tagger(words))
         words_n_pos = map(convert_to_lemmatize_format, words_n_pos)
         word_list.update(set(map(lambda wp: lmtzr.lemmatize(wp[0].lower(), wp[1]), words_n_pos)))
-   
+  
     return (sorted(list(word_list)), [])
 
 def process_snippet(sourceName):
@@ -91,14 +90,15 @@ def process_snippet(sourceName):
 
     # Append snippets to output file
     with open(output_file, 'a') as outFile:
-        scrapedFile = 'bitchySites/' + sourceName + '.jl' 
+        scrapedFile = '../crawler/' + sourceName + '.jl'
         print "Processing snippets from " + sourceName
         with open(scrapedFile, 'r') as jsonFile:
             for line in jsonFile:
                 snippet = json.loads(line)
 
-                # Snippet processing
+                # snippet processing
                 unigramList, bigramList = process_text(snippet['text'])
+                
                 # Assign a NEGATIVE score
                 score = scoreSign * calculate_score(snippet['upVotes'], snippet['downVotes']) 
                 snippetData = {'unigramList': unigramList, 'bigramList': bigramList, 'score': score, 'ID': sourceName+'_'+str(snippet['snippetID'])}
@@ -110,5 +110,4 @@ def process_snippet(sourceName):
 if __name__ == "__main__":
     for source_name in sys.argv[1:]:
         process_snippet(source_name)
-
 

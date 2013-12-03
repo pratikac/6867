@@ -1,0 +1,14 @@
+_simpler_ steps to run code:
+
+    1. get training data
+    cd crawler
+    python scrapeTrainingdata.py
+    - this creates fml.jl, lml.jl etc.
+
+    2. process data
+    cd process
+    python process_data.py
+    - this creates positive.py, negative.py
+
+    3. 
+
