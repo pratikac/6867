@@ -8,3 +8,6 @@
 *.log
 *.out
 *.swp
+
+# python
+*.pyc
