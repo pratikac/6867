@@ -100,5 +100,5 @@ class feature_vector():
 
         def get_word_array_from_bitmap(bit_array):
             l = len(bit_array)
-            which = [i in xrange(l) if bit_array[i] > 0]
+            which = [i for i in xrange(l) if bit_array[i] > 0]
             return [self.int_to_eng_words[wi] for wi in which]
