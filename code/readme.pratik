@@ -1,0 +1,23 @@
+_simpler_ steps to run code:
+
+    1. get training data
+    cd crawler
+    python scrapeTrainingdata.py
+    - this creates fml.jl, lml.jl etc.
+
+    2. process data
+    cd process
+    python process_data.py
+    - this creates positive.py, negative.py
+
+    3. run svm
+    cd learn
+    python run_svm.py
+    - this maps words to numbers and thresholds using either (a) 20 most freq words
+    or (b) freq > 10, say. labels is positive if score>0
+    - runs svm using these features, labels
+
+todo:
+    separate feature vectors for positive and negative
+    do nearest neighbor classification using this
+        -will it work better than svm / pca+svm?
