@@ -17,3 +17,7 @@ _simpler_ steps to run code:
     or (b) freq > 10, say. labels is positive if score>0
     - runs svm using these features, labels
 
+todo:
+    separate feature vectors for positive and negative
+    do nearest neighbor classification using this
+        -will it work better than svm / pca+svm?

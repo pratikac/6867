@@ -1,13 +1,16 @@
 import json, pdb
 from collections import Counter
+import numpy as np
+from scipy.sparse import coo_matrix
 
 class process_data():
     '''
     creates a more malleable representation of data
     '''
-    def __init__(self, dim=200, freq=4):
+    def __init__(self, dim=200, freq=4, tfidf=0.5):
         self.dim = dim
         self.freq= freq
+        self.tfidf = tfidf
         self.word_frequencies = {}
         
         self.word_to_int = {}
@@ -55,27 +58,51 @@ class process_data():
         '''
             get top highest dims or threshold by freq
         '''
-        if self.dim > 0:
-            best_keys = sorted(self.word_frequencies, key=self.word_frequencies.get, reverse=True)[:self.dim]
-            self.word_frequencies = {w:self.word_frequencies[w] for w in best_keys}
-        elif self.freq > 0:
-            self.word_frequencies = {w:f for w,f in self.word_frequencies.iteritems() if f>self.freq}
- 
-        is_word_high_freq = lambda w: w in self.word_frequencies 
         
+        # tf is already calculated in word_frequencies
+        num_documents = len(self.data)
+        num_words = len(self.word_frequencies)
+        row = []
+        col = []
+        count = 0
         for dp in self.data:
-            dp[0] = filter(is_word_high_freq, dp[0])
+            col += dp[0]
+            row += [count for i in xrange(len(dp[0]))]
+            count +=1
+        M = coo_matrix((np.ones(len(row)), (np.array(row),np.array(col))), shape=(num_documents, num_words), dtype=np.int8).todense()
+        M = M.sum(axis=0)[0].tolist()[0]   # row-wise sum, i.e, #docs per word
+        
+        #pdb.set_trace()
+        idf = {w:np.log(float(num_documents)/(1.0+M[w])) for w in self.word_frequencies}
+        tfidf = {w:self.word_frequencies[w]*idf[w] for w in self.word_frequencies}
+        
+        def create_sorted_word_frequencies(which_dict):
+            best_keys = sorted(which_dict, key=which_dict.get, reverse=True)[:self.dim]
+            return {w:self.word_frequencies[w] for w in best_keys}
+        
+        if self.tfidf < 0:
+            if self.dim > 0:
+                self.word_frequencies = create_sorted_word_frequencies(self.word_frequencies)
+            elif self.freq > 0:
+                self.word_frequencies = {w:f for w,f in self.word_frequencies.iteritems() if f>self.freq}
+        else:
+            self.word_frequencies = create_sorted_word_frequencies(tfidf)
+
+        is_chosen_word = lambda w: w in self.word_frequencies 
+        for dp in self.data:
+            dp[0] = filter(is_chosen_word, dp[0])
             if dp[1] > 0:
                 dp[1] = +1
             else:
                 dp[1] = -1
+                        
 
 class feature_vector():
     '''
     constructs a feature vector from word_freq data
     '''
-    def __init__(self, dim, freq):
-        pd = process_data(dim, freq)
+    def __init__(self, dim, freq, tfidf):
+        pd = process_data(dim, freq, tfidf)
         
         self.features = []
         self.labels = []
@@ -102,3 +129,5 @@ class feature_vector():
             l = len(bit_array)
             which = [i for i in xrange(l) if bit_array[i] > 0]
             return [self.int_to_eng_words[wi] for wi in which]
+
+#fv = feature_vector(200,-1, 1)

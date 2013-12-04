@@ -37,7 +37,7 @@ def run_naive_bayes(X,y):
     yp = nb.fit(X,y).predict(X)
     print('num_err: %d' % (yp != y).sum())
 
-fv = feature_vector(200, -1)
+fv = feature_vector(200, -1, 1)
 features, labels = fv.features, fv.labels
 
 X,y = run_pca(features,labels)
@@ -45,5 +45,5 @@ X,y = run_pca(features,labels)
 y = np.array(y)
 #run_svm(X, y)
 #run_decision_tree(X,y)
-#run_adaboost(X,y)
-run_naive_bayes(X,y)
+run_adaboost(X,y)
+#run_naive_bayes(X,y)

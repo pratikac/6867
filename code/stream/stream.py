@@ -33,4 +33,4 @@ stream = MyStreamer(APP_KEY, APP_SECRET,
 
 usa = [-118.665162,28.304381,-66.546021,49.325122]
 boston = [-71.288323,42.17714,-70.918908,42.531326]
-stream.statuses.filter(locations=usa, languages=['en'])
+stream.statuses.filter(locations=boston, languages=['en'])
