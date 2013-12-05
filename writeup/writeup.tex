@@ -68,7 +68,12 @@ Denote the words in a document by $s$. Let the probability of generating an obse
 $$
 \PP(s\ \trm{generated from}\ p) \propto e^{-\gamma d(s, p)}
 $$
-where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a tunable parameter. Note that we need $d(s,p)$ to be symmetric. In our work, we use the Hamming distance between two feature representations as the function $d(\cdot, \cdot)$.
+where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a tunable parameter. Note that we need $d(s,p)$ to be symmetric. In our work, we use the Hamming distance between two feature representations as the function $d(\cdot, \cdot)$. We make use of the set of observations, i.e., words in documents to classify a new document. Let $R_+$ be the set of all reference documents that are maked as $+$, $R_-$ is defined similarly. The probability of a new signal $s$ belonging to $+$ is then,
+
+\aeqs{
+\PP(+ \given s) &= \sum_{r \in R_+}\ \PP(s\ \trm{in}\ +, s\ \trm{shares a latent source with } r)\\
+&= \sum_{r \in R_+}
+}
 
 \section{Conclusions}
 \label{sec:conclusions}
