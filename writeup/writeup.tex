@@ -1,8 +1,7 @@
-\documentclass[10pt, letterpaper, conference, final, twocolumn]{ieeeconf}
+\documentclass[11pt, letterpaper, conference, final, twocolumn]{ieeeconf}
 \IEEEoverridecommandlockouts
 \overrideIEEEmargins
 
-%\usepackage{mathpazo}
 \input{macros.tex}
 
 % margins
@@ -31,6 +30,7 @@
 \title{\bf Twitter-based Mood Evaluation
 	\thanks{$^*$Chemical Engingeering Department, MIT. Email: \href{mailto:vishnusr@mit.edu}{vishnusr@mit.edu}}
 	\thanks{$^\dag$Laboratory of Information and Decision Systems, MIT. Email: \href{mailto:pratikac@mit.edu}{pratikac@mit.edu}}
+	\thanks{Note: Equal contribution from both authors}
 }
 \author{Vishnu Sresht$^*$ \qquad Pratik Chaudhari$^\dag$}
 \maketitle
@@ -42,19 +42,71 @@ By providing a convenient, readily-accessible way to reach out to a global audie
 \section{Introduction}
 \label{sec:intro}
 
+
+
 \section{Scraping data}
 \label{sec:data}
 
+\subsection{Data crawler}
+\label{ssec:crawler}
+
+\subsection{Scoring and Confidence estimation}
+\label{ssec:scoring}
+
+A 'downVote' assigned to a snippet from mylifeisg.com or lmylife.com implies
+that (in the opinion of the voter) the author's life is not as 'good' as she
+claims. Consequently, we can use a score derived from the numbers of upVotes
+and downVotes received by each snippet to represent how positive that snippet
+really is. With the snippets from fmylife.com, there is a subtle twist to this
+argument. A downVote on this site implies that the voter '... deserve[s] it'.
+Snippets that obtain more downVotes than upVotes are typically of the form
+where the author confesses to some wrongdoing - such as unprotected sex, or
+petty theft. For the sake of simplicity, we will invoke the rather Freudian
+argument that such acts of wrongdoing increase the author's happiness (at least
+in the short term) and therefore, a snippet from fmylife.com with a negative
+score represents a positive sentiment.
+
+The score for each snippet is calculated from the numbers of upvotes and
+downvotes received by the snippet (on its source site) using Wilson's interval score~\cite{miller_interval}. This algorithm calculates the lower bound of one-sided interval within which we
+can claim (with a given confidence) that the true value of (positive
+votes)/(total votes) lies. One of the key assumptions involved in scoring the snippets this way is that `value' of one vote is the same across the different source sites. 
+
+The output of this step comprises two JSON files `positive.jl' and `negative.jl' that contain pre-processed positive and negative snippets respectively.
+
+\subsection{Tokenization}
+\label{ssec:tokenization}
+
+In this section, we discuss methods used to clean a word corpus to enable efficient (and good) feature extraction. A typical document in our data-set looks as follows,
+\begin{quote}
+\emph{Today, I was the only one in an elevator when an attractive girl came in, talking on her phone.  She told her friend, ``I have to go, there's a cute guy on this elevator''.  Before I could even react, she turned to me and said, ``Sorry for lying, I really wanted to get off the phone with her''. FML}
+\end{quote}
+A typical document in our dataset contains a number of words such as articles, time of the day, and propositions, which are inconsequential to the task of classification. We therefore perform a process called ``tokenization and stemming'' of each document. This consists of the following steps:
+\enum{1.}{
+\item Break the document into individual sentences,
+\item Keep only words which do not include any digits and are more than three letters long,
+\item Filter out using a stop word dictionary which consists of common articles, propositions, etc.,
+\item Tag each word using its appropriate part of speed in the sentence. An HMM-based model is used to estimate the correct part of speech for every word. We only use nouns, adjectives and verbs in our analysis.
+\item Lemmatize the resulting words: this process converts words such as ``studying'' to ``study'', ``boyfriend's'' to ``boyfriend'' etc. This is an essential step to ensure a good vocabulary construction.
+}
+
+A Python based natural language processing library, \href{http://www.nltk.org}{NLTK} was used for steps $3,4,5$ mentioned above. It uses words from \href{http://wordnet.princeton.edu}{Wordnet} to lemmatize and tokenize words in a corpus. The final result of running this sequence of steps on the document described above is the following set of words which quite succintly captures the incident in the elevator!
+\begin{quote}
+\emph{attractive, come, cute, elevator, friend, girl, guy, lying, phone, say, tell, today, want}
+\end{quote}
+
+\subsection{Discussion}
+\label{ssec:discussion}
+
 \begin{figure}[!htp]
 \centering
-\includegraphics[width= 0.9 \columnwidth]{fig/pos_cloud}
+\includegraphics[width= 0.8 \columnwidth]{fig/pos_cloud}
 \caption{Word cloud for documents with positive sentiment}
 \label{fig:pos_cloud}
 \end{figure}
 %
 \begin{figure}[!htp]
 \centering
-\includegraphics[width= 0.9 \columnwidth]{fig/neg_cloud}
+\includegraphics[width= 0.8 \columnwidth]{fig/neg_cloud}
 \caption{Word cloud for documents with negative sentiment}
 \label{fig:neg_cloud}
 \end{figure}
@@ -62,37 +114,82 @@ By providing a convenient, readily-accessible way to reach out to a global audie
 \section{Feature representation}
 \label{sec:features}
 
+From the preceeding section, we obtain a set of short documents, let us cay them $D = \{d_1, d_2, \ldots, d_m\}$, with each document $i$ containing a possibly different set of words $w_{i} = \{w_{i,1}, w_{i, 2}, \ldots, w_{i, n_i} \}$. The purpose of this section is to select a good vocabulary of $n$ words, call it $W^*$, from the combined set of words, $W = \{w_1, \ldots, w_m\}$. Given such a set, we obtain a feature vector of length $n$ for every document $d_i$, say $x_i$.
+$$
+x_i[j] = \begin{cases}
+	1 & \trm{ if } w_{i,j} \in W \\
+	0 & \trm{ otherwise }
+\end{cases}
+$$
+This results in a set of $n$-dimensional feature vectors $X = \{ x_1, x_2, \ldots, x_m \}$ with labels $Y = \{y_1, y_2, \ldots, y_m \}$. For some algorithms, we map the labels to binary classes, $C = \{c_1, c_2, \ldots, c_m \}$.
+$$
+c_i = \begin{cases}
+	+ & \trm{ if } y_i > 0 \\
+	- & \trm{ otherwise }
+\end{cases}
+$$
+
 We employ four different feature representations:
-\enum{1.}{
-\item Word frequency (WF)
-\item Information gain (IG)
-\item Gain ratio (GR)
-\item Term frequency and inverse document frequency (TF-IDF)
-}
-
-\subsection{Word Frequency}
+\paragraph{Word Frequency}
 \label{ssec:wf}
+We can construct a word frequency map for every word $w \in W$ as,
+$$
+tf(w) = \sum_{i=1}^m [[ w \in w_i ]]
+$$
+The vocabulary $W^*$, is then set of words with $n$ highest frequencies.
 
-\subsection{Information Gain}
+\paragraph{Information Gain}
 \label{ssec:ig}
 
-\subsection{Gain Ratio}
+\paragraph{Gain Ratio}
 \label{ssec:gr}
 
-\subsection{TF-IDF}
+\paragraph{TF-IDF}
 \label{ssec:tfidf}
+We also used an approach inspired from a popular method of constructing small vocabularies from a word corpus called ``term frequency-inverse document frequency''. The first term, i.e., term frequency is already computed in Sec.~\ref{ssec:wf}. Inverse document frequency is defined for a word $w \in W$ as
+$$
+idf(w) = \log \left[ \frac{m}{\abs{\{i: w \in w_i \}}} \right].
+$$
+The denominator here is the number of documents that a word $w$ appears in. Thus $idf$ penalises words which occur very frequently in documents. The vocabulary $W^*$ is constructed using the words with the highest value of the product $tf(w) idf(w)$. In conventional TF-IDF formulations, each document has a large number of repeated words, e.g, research papers, which is not true in our case.
+
+We note that this approach gives the best performance for a number of algorithms tested in this report.
 
 \section{Preliminary results}
 \label{sec:prelim}
 
-This section uses the feature representation created in Sec.~\ref{sec:features} and shows an analysis of various algorithms and features on the data. 
-In addition to this, we analyse the data using four different algorithms,
-\enum{1.}{
-\item Support Vector Machine
-\item Principle component analysis (PCA) with SVM
-\item Adaboost
-\item Naive Bayes classifier
+This section uses the feature representation created in Sec.~\ref{sec:features} and shows an analysis of various algorithms and features on the data.
+For the algorithms discussed in this section, we used a popular Python library for machine learning called $\tt scikit\_learn$~\cite{scikit-learn}. This library has very efficient and well documented implementations of algorithms which makes it possible to evaluate the performance with different values of parameters. We analyse the data using four different algorithms as described below:
+
+\subsection{Support Vector Machine}
+\label{ssec:svm}
+
+\subsection{Principle Component Analysis}
+\label{ssec:pca}
+
+
+\subsection{Adaboost}
+\label{ssec:adaboost}
+%
+Adaboost is a popular algorithm introduced by Freud and Schapire in~\cite{freund1999short}. The idea here is to fit a sequence of weak learners, e.g., one dimensional decision trees on slightly modified versions of the same data set. The predictions from all these weak learners (along with weights) are collected together to obtain the final classifier.
+
+\subsection{Naive Bayes classifer}
+\label{ssec:naive_bayes}
+%
+We are interested in calculating the probability of a label $+$ given all the words in a document, i.e., $\PP(+ \given w_1, \ldots, w_n)$. This can be written as,
+\aeqs{
+\PP(+ \given w_1, \ldots, w_n) &= \frac{\PP(+)\ \PP(w_1, \ldots, w_n \given + )}{\PP(w_1, \ldots, w_n)}\\
+&\propto \PP(+, w_1, \ldots, w_n).
 }
+The numerator is a product of the prior probability of a class $+$ and the likelihood of generating $w_1, \ldots, w_n$ given $+$ to obtain the posterior on the left hand side. The Naive Bayes classifer works on the simple premise that the joint probability can be factorized as
+$$
+\PP(+, w_1, \ldots, w_n) = \PP(+) \prod_{i=1}^n \PP(w_i \given +)
+$$
+i.e., the probabiltiy of generating a class $+$ from individual words $w_i$ is independent of some other word $w_j$. A classifier can be obtained easily from this argument by as
+$$
+h(w_1, \ldots, w_n) = \arg \max_{c \in \{ +, - \} }\ \PP(c) \prod_{i=1}^n \PP(w_i \given c)
+$$
+
+In other words, it considers unigrams as independent of each other. Strictly speaking, this is not correct. As Fig.~\ref{fig:pos_cloud} and Fig.~\ref{fig:neg_cloud} show, there are quite a few common words in both data sets and a word like \emph{boyfriend} only shows a markedly different frequency in the two classes. However, for large amounts of data, this effect is less pronounced and we still obtain good classification.
 
 \section{Latent topics}
 \label{sec:latent}
@@ -101,11 +198,11 @@ The previous section demonstrated the performance of various classifers on the f
 
 This idea has been pursued in literature in a number of different ways. Let us note a popular line of research that introduces supervised learning for topic models~\cite{blei2010supervised}. The idea here is to classify using 
 
-Suppose that for the two classes, $+$ (documents that express positive sentiment) and $-$ (documents that express a negative sentiment), we have a set of latent topics. Let $p = \{ p_1, \ldots, p_m \}$ be the topics that result in words associated with $+$ and $q = \{ q_1, \ldots, q_n \}$ be the topics that result in words associated with $-$. Each sentiment $+$, $-$ is a noisy observation based upon these latent topics. However, we do not know what these topics are and hence we create a simple model based on them.
+Suppose that for the two classes, $+$ (documents that express positive sentiment) and $-$ (documents that express a negative sentiment), we have a set of latent topics. Let $p = \{ p_1, \ldots, p_m \}$ be the topics that result in words associated with $+$ and $q = \{ q_1, \ldots, q_n \}$ be the topics that result in words associated with $-$. Each sentiment $+$, $-$ is a noisy observation based upon these latent topics. However, we do not know what these topics are and hence we create a simple model for them.
 
-Denote the words in a document by $s$. Let the probability of generating an observation $s$ from latent topics $p$ be
+Denote the words in a document by $s$. Let the probability of generating an observation $s$ from latent topics $p$ be,
 $$
-\PP(s\ \trm{generated from}\ p) \propto e^{-\gamma d(s, p)}
+\PP(s\ \trm{generated from}\ p) \propto e^{-\gamma\ d(s, p)}
 $$
 where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a tunable parameter. Note that we need $d(s,p)$ to be symmetric. In our work, we use the Hamming distance between two feature representations as the function $d(\cdot, \cdot)$. We make use of the set of observations, i.e., words in documents to classify a new document. Let $R_+$ be the set of all reference documents that are maked as $+$, $R_-$ is defined similarly. The probability of a new signal $s$ belonging to $+$ is then,
 
