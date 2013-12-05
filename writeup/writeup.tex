@@ -48,17 +48,42 @@ By providing a convenient, readily-accessible way to reach out to a global audie
 \section{Feature representation}
 \label{sec:features}
 
-various subsections for different methods.
+We employ four different feature representations:
+\enum{1.}{
+\item Word frequency (WF)
+\item Information gain (IG)
+\item Gain ratio (GR)
+\item Term frequency and inverse document frequency (TF-IDF)
+}
+
+\subsection{Word Frequency}
+\label{ssec:wf}
+
+\subsection{Information Gain}
+\label{ssec:ig}
+
+\subsection{Gain Ratio}
+\label{ssec:gr}
+
 \subsection{TF-IDF}
 \label{ssec:tfidf}
 
 \section{Preliminary results}
 \label{sec:prelim}
 
+This section uses the feature representation created in Sec.~\ref{sec:features} and shows an analysis of various algorithms and features on the data. 
+In addition to this, we analyse the data using four different algorithms,
+\enum{1.}{
+\item Support Vector Machine (with PCA)
+\item Adaboost
+\item Decision Tree classifer
+\item Naive Bayes classifier
+}
+
 \section{Latent topics}
 \label{sec:latent}
 
-The previous section demonstrated the performance of various classifers on the feature representations obtained from the data. This section builds upon the idea that words in a document are results of a few latent topics. In other words, rather than training a classifer to distinguish between words, we train it to distinguish between latent topics.
+The previous section demonstrated the performance of various classifers on the feature representations obtained from the data. This section builds upon the idea that words in a document are results of a few latent topics. In other words, rather than training a classifer to distinguish between words, we train it to distinguish between latent topics. The analysis in this section is inspired by~\cite{nikolov2012nonparametric}. 
 
 This idea has been pursued in literature in a number of different ways...\ldots.
 
@@ -77,9 +102,9 @@ where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a 
 &\sim \sum_{r \in R_+} \exp \left( -\gamma \min_j [ d(s, p_j) + d(r, p_j)] \right)\\
 &\sim \sum_{r \in R_+} \exp \left(-C\ \gamma d(s,r) \right).
 }
-The second last is obtained as follows. We see that for a large $\gamma$, the summation $\sum_{j=1}^n$ is dominated by the term with the minimum exponent. Also, the last approximation is obtained by noting that the minimum over all terms of the form $[ d(s, p_j) + d(r, p_j)]$ over all signals in $p$ is of the form $C d(s,r)$ for some $C > 0$ and is achieved at $p^* = (s+r)/2$. It is easy to see that this is a valid approximation when the latent source $p_{j^*}$ is close to the global minimizer $p^*$.
+The second last approximation is obtained as follows: We see that for a large $\gamma$, the summation $\sum_{j=1}^n$ is dominated by the term with the minimum exponent. On the other hand, the last approximation is obtained by noting that the minimum over all terms of the form $[ d(s, p_j) + d(r, p_j)]$ over all signals in $p$ is of the form $C d(s,r)$ for some $C > 0$ and is achieved at $p^* = (s+r)/2$. It is easy to see that this is a valid approximation when the latent source $p_{j^*}$ is close to the global minimizer $p^*$.
 
-We can approximate $\PP(- \given s)$ similarly. The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold.
+We can approximate $\PP(- \given s)$ similarly. The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, we tuned $\theta$ and set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$ (cite the walmart pregnancy example here).
 
 \section{Conclusions}
 \label{sec:conclusions}
