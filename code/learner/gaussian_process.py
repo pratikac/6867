@@ -1,79 +1,65 @@
-import json
-import numpy as np
-from scipy.sparse import coo_matrix
+from get_features import *
 
-class process_file():
-    '''
-    separates positive and negative
-    '''
+
+class gaussian_process(): 
     
-    def __init__(self, dim=200, fname):
-        self.dim = dim
-        self.fname = fname
-    
-    def get_words():
+    def __init__(self, dim, freq, tfidf):
+        self.pd = process_data(dim, freq, tfidf)
         
-        # 1. all_words
-        all_words = set()
-        num_documents = 0
-        with open(self.fname, 'r') as file:
-            for line in file:
-                snippet = json.loads(line)
-                all_words.update(snippet['unigramList'])
-                num_documents += 1
-        
-        num_words = len(all_words)
-        self.word_to_int = dict(zip(list(all_words), range(num_words)))
-        self.int_to_word = dict(zip(range(num_words),list(all_words)))
-    
-    def compute_tf_idf():
-        # 2. calculate tf, idf
-        row,col = [],[]
-        count = 0
-        lambda_word_to_int = lambda x: self.word_to_int[x]
-        with open(self.fname, 'r') as file:
-            for line in file:
-                snippet = json.loads(line)
-                words = map(lambda_word_to_int, snippet['unigramList'])
-                col += words
-                row += [count for i in xrange(len(words))]
-                count += 1
-        M = coo_matrix((np.ones(len(row)), (np.array(row),np.array(col))), 
-                       shape=(num_documents, num_words), dtype=np.int8).todense()
-        
-        # is this correct?
-        tmp1 = M.sum(axis=0)[0].tolist()[0]   # row-wise sum, i.e, #docs per word
-        idf = {w:np.log(float(num_documents)/(1.0+tmp1[w])) for w in self.word_to_int}
-        tf = {w:tmp1[w] for w in self.word_to_int}
-        self.tf_idf = {w:tf[w]*idf[w] for w in self_word_to_int}
-    
-    def prune_words():
-        best_keys = sorted(tf_idf, key=tf_idf.get, reverse=True)[:self.dim]
-        self.words = {w:self.tf_idf[w] for w in best_keys}
-        
-        num_words = len(self.words)
-        word_to_index = dict(zip(self.words.keys(), range(num_words)))
-        index_to_word = dict(zip(range(num_words), self.words.keys()))
+        self.features = []
+        self.labels = []
+        self.int_to_eng_words = {}
 
-        lambda_word_to_int = lambda x: self.word_to_int[x]
-        with open(self.fname, 'r') as file:
-            for line in file:
-                snippet = json.loads(line)
-                words = map(lambda_word_to_int, snippet['unigramList'])
-                
+        self.pos_features, self.neg_features = [], []
+        self.pos_labels, self.neg_labels = [], []
 
+        self.word_freq = self.pd.word_frequencies
+        self.num_words = len(self.word_freq)
+        self.word_to_index = dict(zip(self.word_freq.keys(), range(self.num_words)))
+        self.index_to_word = dict(zip(range(self.num_words), self.word_freq.keys()))
+        for index in range(self.num_words):
+            self.int_to_eng_words[index] = self.pd.int_to_word[self.index_to_word[index]]
 
-class gaussian_process():
-    def __init__(self):
-        pos_words = process_file(100, '../process/positive.jl')
-        neg_words = process_file(100, '../process/negative.jl')
-        
-        
-    def 
-        
-        
-        
+        for dp in self.pd.data:
+            z = self.get_bitmap(dp[0])
+            self.features.append(z)
+            self.labels.append(dp[1])
+            if dp[1] > 0:
+                self.pos_labels.append(dp[1])
+                self.pos_features.append(z)
+            else:
+                self.neg_labels.append(dp[1])
+                self.neg_features.append(z)
 
+    def get_bitmap(self, word_array):
+        z = [0 for i in range(self.num_words)]
+        for w in word_array:
+            z[self.word_to_index[w]] = self.word_freq[w]
+        return np.array(z)
 
-
+    def predict(self, z):
+        C = 1
+        gamma = 1
+        theta = 1
+        hamming_dist = lambda x,y : np.sum(np.abs(x-y))
+        p_pos = sum(np.array([np.exp(-C*gamma*hamming_dist(z,fv)) for fv in self.pos_features]))
+        p_neg = sum(np.array([np.exp(-C*gamma*hamming_dist(z,fv)) for fv in self.neg_features]))
         
+        if p_neg <1e-10:
+            return 1
+        ratio  = p_pos/p_neg
+        if ratio > theta:
+            return 1
+        else:
+            return -1
+
+def test():
+    gp = gaussian_process(200, -1, 1)
+    predictions = []
+    for fv in gp.neg_features:
+        t1 = gp.predict(fv)
+        predictions.append(t1)
+        print t1
+
+    tmp1 = np.array(predictions)
+    print np.sum(np.where(tmp1 > 0))/float(len(predictions)) 

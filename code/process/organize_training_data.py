@@ -98,7 +98,9 @@ def process_snippet(sourceName):
 
                 # snippet processing
                 unigramList, bigramList = process_text(snippet['text'])
-                
+                if len(unigramList) == 0:
+                    continue
+
                 # Assign a NEGATIVE score
                 score = scoreSign * calculate_score(snippet['upVotes'], snippet['downVotes']) 
                 snippetData = {'unigramList': unigramList, 'bigramList': bigramList, 'score': score, 'ID': sourceName+'_'+str(snippet['snippetID'])}
