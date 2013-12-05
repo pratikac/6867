@@ -11,8 +11,8 @@ import pdb
 
 def run_svm(X, y):
     clf = svm.SVC(kernel='rbf',gamma=1.0, C=1.5)
-    clf=clf.fit(X, y)
-    scores = cross_val_score(clf, X,y)
+    clf=clf.fit(X, np.sign(y), sample_weight=np.abs(y))
+    scores = cross_val_score(clf, X,np.sign(y))
     #print clf.support_vectors_    
     print scores.mean()
 
@@ -37,13 +37,15 @@ def run_naive_bayes(X,y):
     yp = nb.fit(X,y).predict(X)
     print('num_err: %d' % (yp != y).sum())
 
+
 fv = feature_vector(200, -1, 1)
 features, labels = fv.features, fv.labels
 
 X,y = run_pca(features,labels)
 
 y = np.array(y)
-#run_svm(X, y)
-#run_decision_tree(X,y)
-run_adaboost(X,y)
-#run_naive_bayes(X,y)
+ys = np.sign(y)
+run_svm(X, y)
+#run_decision_tree(X,ys)
+#run_adaboost(X,ys)
+#run_naive_bayes(X,ys)

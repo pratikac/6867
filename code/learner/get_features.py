@@ -91,11 +91,6 @@ class process_data():
         is_chosen_word = lambda w: w in self.word_frequencies 
         for dp in self.data:
             dp[0] = filter(is_chosen_word, dp[0])
-            if dp[1] > 0:
-                dp[1] = +1
-            else:
-                dp[1] = -1
-                        
 
 class feature_vector():
     '''
