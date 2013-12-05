@@ -31,7 +31,7 @@ def run_adaboost(X, y):
 
 def run_pca(X, y):
     #kpca = KernelPCA(kernel='rbf', fit_inverse_transform=True, gamma=10)
-    pca = PCA(n_components=10)
+    pca = PCA(n_components=25)
     X = pca.fit_transform(X)
     return X, y
 
@@ -52,13 +52,12 @@ f.get_F()
 f.prune_features()
 f.gen_f_vectors()
 
-features = f.f_vector
-labels = [1 if score > 0 else -1 for score in f.scores]
-
+X = f.f_vector
+y = np.array(f.scores)
+ys = np.sign(f.scores)
 
 # Run algorithm
-X, y = run_pca(features, labels)
-y = np.array(y)
+X, y = run_pca(X, y)
 run_svm(X,y)
 
 ##run_decision_tree(X,y)
