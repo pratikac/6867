@@ -66,8 +66,9 @@ Suppose that for the two classes, $+$ (documents that express positive sentiment
 
 Denote the words in a document by $s$. Let the probability of generating an observation $s$ from latent topics $p$ be
 $$
-\PP(s | p) = 
+\PP(s\ \trm{generated from}\ p) \propto e^{-\gamma d(s, p)}
 $$
+where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a tunable parameter. Note that we need $d(s,p)$ to be symmetric. In our work, we use the Hamming distance between two feature representations as the function $d(\cdot, \cdot)$.
 
 \section{Conclusions}
 \label{sec:conclusions}
