@@ -58,6 +58,14 @@ various subsections for different methods.
 \section{Latent topics}
 \label{sec:latent}
 
+The previous section demonstrated the performance of various classifers on the feature representations obtained from the data. This section builds upon the idea that words in a document are results of a few latent topics. In other words, rather than training a classifer to distinguish between words, we train it to distinguish between latent topics.
+
+This idea has been pursued in literature in a number of different ways...\ldots.
+
+Suppose that for the two classes, $+$ (documents that express positive sentiment) and $-$ (documents that express a negative sentiment), we have a set of latent topics. Let $p_1, \ldots, p_m$ be the topics that result in words associated with $+$ and $q_1, \ldots, q_n$ be the topics that result in words associated with $-$. Each sentiment $+$, $-$ is a noisy observation based upon these latent topics. However, we do not know what these topics are and hence we create a simple model based on them.
+
+Denote the words in a document by $s$. 
+
 \section{Conclusions}
 \label{sec:conclusions}
 
