@@ -1,4 +1,7 @@
-from get_features import *
+# Terrible hack ... just absolutely awful
+import imp
+feature_representations = imp.load_source('feature_representations', '../features/feature_representations.py')
+from feature_representations import *
 
 import numpy as np
 from sklearn import svm
@@ -37,13 +40,36 @@ def run_naive_bayes(X,y):
     yp = nb.fit(X,y).predict(X)
     print('num_err: %d' % (yp != y).sum())
 
-fv = feature_vector(200, -1, 1)
-features, labels = fv.features, fv.labels
 
-X,y = run_pca(features,labels)
+###################################################################
+## Script starts below:
+###################################################################
 
+# Import X, y
+f = TFIDF(200, -1, 1)
+f.readJSON('../process/snippets.jl')
+f.get_F()
+f.prune_features()
+f.gen_f_vectors()
+
+features = f.f_vector
+labels = [1 if score > 0 else -1 for score in f.scores]
+
+
+# Run algorithm
+X, y = run_pca(features, labels)
 y = np.array(y)
-#run_svm(X, y)
-#run_decision_tree(X,y)
-run_adaboost(X,y)
-#run_naive_bayes(X,y)
+run_svm(X,y)
+
+
+
+#fv = feature_vector(200, -1, 1)
+#features, labels = fv.features, fv.labels
+#
+#X,y = run_pca(features,labels)
+#
+#y = np.array(y)
+##run_svm(X, y)
+##run_decision_tree(X,y)
+#run_adaboost(X,y)
+##run_naive_bayes(X,y)
