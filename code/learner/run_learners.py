@@ -14,8 +14,8 @@ import pdb
 
 def run_svm(X, y):
     clf = svm.SVC(kernel='rbf',gamma=1.0, C=1.5)
-    clf=clf.fit(X, np.sign(y), sample_weight=np.abs(y))
-    scores = cross_val_score(clf, X,np.sign(y))
+    clf=clf.fit(X, y)
+    scores = cross_val_score(clf, X,y)
     #print clf.support_vectors_    
     print scores.mean()
 
@@ -31,7 +31,7 @@ def run_adaboost(X, y):
 
 def run_pca(X, y):
     #kpca = KernelPCA(kernel='rbf', fit_inverse_transform=True, gamma=10)
-    pca = PCA(n_components=25)
+    pca = PCA(n_components=10)
     X = pca.fit_transform(X)
     return X, y
 
@@ -52,14 +52,24 @@ f.get_F()
 f.prune_features()
 f.gen_f_vectors()
 
-X = f.f_vector
-y = np.array(f.scores)
-ys = np.sign(f.scores)
+features = f.f_vector
+labels = [1 if score > 0 else -1 for score in f.scores]
+
 
 # Run algorithm
-X, y = run_pca(X, y)
+X, y = run_pca(features, labels)
+y = np.array(y)
 run_svm(X,y)
 
+
+
+#fv = feature_vector(200, -1, 1)
+#features, labels = fv.features, fv.labels
+#
+#X,y = run_pca(features,labels)
+#
+#y = np.array(y)
+##run_svm(X, y)
 ##run_decision_tree(X,y)
 #run_adaboost(X,y)
 ##run_naive_bayes(X,y)

@@ -33,12 +33,14 @@ process/snippets.jl: process/positive.jl process/negative.jl
 process/positive.jl: $(POSITIVE_SITES)
 	cd process/ &&\
 	python organize_training_data.py $(subst crawler/,,$(subst .jl,,$?)) &&\
+	python process_twitter.py &&\
 	sort -u positive.jl > positive_uniq.jl &&\
 	mv positive_uniq.jl positive.jl
 	
 process/negative.jl: $(NEGATIVE_SITES)
 	cd process/ &&\
 	python organize_training_data.py $(subst crawler/,,$(subst .jl,,$?)) &&\
+	python process_twitter.py &&\
 	sort -u negative.jl > negative_uniq.jl &&\
 	mv negative_uniq.jl negative.jl
 
