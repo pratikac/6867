@@ -7,7 +7,8 @@ PROJECT = sentiment_analysis
 # 	WordPresence
 # 	GainRatio
 # 	InformationGain
-FEATURE_SELECTION = WordFrequency
+# 	TFIDF
+FEATURE_SELECTION = TFIDF
 
 TRAINING_DATA = features/training_data.jl
 POSITIVE_SITES = crawler/LML.jl crawler/MLIG.jl
