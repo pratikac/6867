@@ -9,32 +9,37 @@ PROJECT = sentiment_analysis
 # 	InformationGain
 FEATURE_SELECTION = WordFrequency
 
-TRAINING_DATA = training_data.jl
+TRAINING_DATA = features/training_data.jl
 POSITIVE_SITES = crawler/LML.jl crawler/MLIG.jl
 NEGATIVE_SITES = crawler/FML.jl
 SCRAPED_SNIPPETS = crawler/FML.jl crawler/LML.jl crawler/MLIA.jl crawler/MLIG.jl
 
 all: $(PROJECT)
 
+features: $(TRAINING_DATA)
+
 $(PROJECT): $(TRAINING_DATA)
 
-$(TRAINING_DATA): snippets.jl
-	python process/extract_features.py $(FEATURE_SELECTION)
+$(TRAINING_DATA): process/snippets.jl
+	cd features &&\
+	python extract_features.py $(FEATURE_SELECTION)
 
-snippets.jl: positive.jl negative.jl
+process/snippets.jl: process/positive.jl process/negative.jl
 	cat $? >> process/snippets.jl &&\
 	sort -u process/snippets.jl > process/snippets_uniq.jl &&\
 	mv process/snippets_uniq.jl process/snippets.jl
 
-positive.jl: $(POSITIVE_SITES)
-	python process/organize_training_data.py $(subst crawler/,,$(subst .jl,,$?)) &&\
-	sort -u process/positive.jl > process/positive_uniq.jl &&\
-	mv process/positive_uniq.jl process/positive.jl
+process/positive.jl: $(POSITIVE_SITES)
+	cd process/ &&\
+	python organize_training_data.py $(subst crawler/,,$(subst .jl,,$?)) &&\
+	sort -u positive.jl > positive_uniq.jl &&\
+	mv positive_uniq.jl positive.jl
 	
-negative.jl: $(NEGATIVE_SITES)
-	python process/organize_training_data.py $(subst crawler/,,$(subst .jl,,$?)) &&\
-	sort -u process/negative.jl > process/negative_uniq.jl &&\
-	mv process/negative_uniq.jl process/negative.jl
+process/negative.jl: $(NEGATIVE_SITES)
+	cd process/ &&\
+	python organize_training_data.py $(subst crawler/,,$(subst .jl,,$?)) &&\
+	sort -u negative.jl > negative_uniq.jl &&\
+	mv negative_uniq.jl negative.jl
 
 crawler/LML.jl: 
 	cd crawler/ &&\
@@ -56,7 +61,6 @@ crawler/MLIG.jl:
 
 scrape_all: 
 	cd crawler/ &&\
-	echo `pwd` &&\
 	python scrapeTrainingData.py &&\
 	sort -u LML.jl > LML_uniq.jl &&\
 	mv LML_uniq.jl LML.jl 

@@ -4,7 +4,7 @@
     scores post lemmatization
 """
 
-import simplejson as json
+import json
 from math import sqrt
 from nltk.corpus import stopwords, wordnet
 from nltk.tokenize import RegexpTokenizer
