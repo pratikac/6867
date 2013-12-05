@@ -4,7 +4,7 @@ import sys
 
 
 # construct algorithms
-algorithms = [run_svm, run_pca, run_adaboost, run_naive_bayes]
+algorithms = [run_svm, run_pca, run_naive_bayes]
 
 create_features = 0
 features = []
@@ -12,10 +12,10 @@ features = []
 if create_features:
     
     # init features
-    wf= WordFrequency(nDim=100)
-    ig = InformationGain(nDim=100)
-    gr = GainRatio(nDim=100)
-    tfidf = TFIDF(100,-1,1)
+    wf= WordFrequency(nDim=200)
+    ig = InformationGain(nDim=200)
+    gr = GainRatio(nDim=200)
+    tfidf = TFIDF(200,-1,1)
 
     # construct features
     features = [wf, ig, gr, tfidf]
@@ -37,8 +37,9 @@ def run_all_tests():
         for alg in algorithms:
             print feature.__class__.__name__, alg.__name__, alg(X,y)
 
-def run_one_test(alg):
-    X, y = features[3].f_vector, features[3].scores
+def run_one_test(feature, alg):
+    X, y = feature.f_vector, feature.scores
     print alg(X,y)
 
-run_one_test(algorithms[2])
+#run_one_test(features[3], algorithms[2])
+run_all_tests()

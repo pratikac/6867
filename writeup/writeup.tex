@@ -150,7 +150,7 @@ We also used an approach inspired from a popular method of constructing small vo
 $$
 idf(w) = \log \left[ \frac{m}{\abs{\{i: w \in w_i \}}} \right].
 $$
-The denominator here is the number of documents that a word $w$ appears in. Thus $idf$ penalises words which occur very frequently in documents. The vocabulary $W^*$ is constructed using the words with the highest value of the product $tf(w) idf(w)$. In conventional TF-IDF formulations, each document has a large number of repeated words, e.g, research papers, which is not true in our case.
+The denominator here is the number of documents that a word $w$ appears in. Thus $idf$ penalises words which occur very frequently in documents. The vocabulary $W^*$ is constructed using the words with the highest value of the product $tf(w) * idf(w)$. In conventional TF-IDF formulations, each document has a large number of repeated words, e.g, research papers, which is not true in our case.
 
 We note that this approach gives the best performance for a number of algorithms tested in this report.
 

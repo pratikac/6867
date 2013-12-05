@@ -8,7 +8,7 @@ from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.decomposition import PCA, KernelPCA
 from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifer
+from sklearn.tree import DecisionTreeClassifier
 
 from sklearn.cross_validation import cross_val_score
 import pdb
@@ -20,8 +20,8 @@ def run_svm(X, y):
     #scores = cross_val_score(clf, X, np.sign(y))
     #print scores.mean()
 
-    #yp = np.array([clf.predict(x)[0] for x in X])
-    #return (yp == np.sign(y)).sum()/float(len(y))
+    yp = np.array([clf.predict(x)[0] for x in X])
+    return (yp == np.sign(y)).sum()/float(len(y))
 
 def run_decision_tree(X, y):
     clf = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=1, random_state=0)
@@ -30,15 +30,18 @@ def run_decision_tree(X, y):
     #return (yp == np.sign(y)).sum()/float(len(y))
 
 def run_adaboost(X, y):
-    clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1),
-                                                 algorithm="SAMME",
-                                                 n_estimators=25)
+    #clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1), n_estimators=25)
+    clf = AdaBoostClassifier(n_estimators=25)
     clf.fit(X,y)
+    
+    #scores = cross_val_score(clf, X, np.sign(y))
+    #print scores.mean()
+    
     yp = np.array([clf.predict(x)[0] for x in X])
     return (yp == np.sign(y)).sum()/float(len(y))
 
 def run_pca(X, y):
-    pca = PCA(n_components=25)
+    pca = PCA(n_components=50)
     X = pca.fit_transform(X)
     clf = svm.SVC(kernel='rbf',gamma=1.0, C=3)
     clf=clf.fit(X, np.sign(y), sample_weight=np.abs(y))
@@ -49,7 +52,6 @@ def run_naive_bayes(X,y):
     nb = GaussianNB()
     yp = nb.fit(X, np.sign(y)).predict(X)
     return (yp == np.sign(y)).sum()/float(len(y))
-
 
 ###################################################################
 ## Script starts below:
