@@ -130,4 +130,12 @@ class feature_vector():
             which = [i for i in xrange(l) if bit_array[i] > 0]
             return [self.int_to_eng_words[wi] for wi in which]
 
+        with open('training_data_old.jl', 'w') as outFile:
+            for dpNo, dp in enumerate(pd.data):
+                fVectorData = {'ID':dp[2], 'score':dp[1], 'f_vector': self.features[dpNo]}
+                outFile.write(json.dumps(fVectorData)+"\n")
+
+if __name__ == '__main__':
+    feature_vector(200,4,0.5)
+
 #fv = feature_vector(200,-1, 1)
