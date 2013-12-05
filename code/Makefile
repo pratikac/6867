@@ -26,9 +26,14 @@ $(TRAINING_DATA): process/snippets.jl
 	python extract_features.py $(FEATURE_SELECTION)
 
 process/snippets.jl: process/positive.jl process/negative.jl
+	add_twitter
 	cat $? >> process/snippets.jl &&\
 	sort -u process/snippets.jl > process/snippets_uniq.jl &&\
 	mv process/snippets_uniq.jl process/snippets.jl
+
+add_twitter:
+	cd process/ &&\
+	python process_twitter.py
 
 process/positive.jl: $(POSITIVE_SITES)
 	cd process/ &&\
