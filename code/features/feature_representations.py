@@ -118,7 +118,7 @@ class WordFrequency(BaseFeatureExtractor):
             return best_keys
 
         self.chosen_ngrams = create_sorted_word_frequencies(self.word_frequencies)
-        print self.chosen_ngrams
+        #print self.chosen_ngrams
         self.chosen_columns = [self.word_to_int[x] for x in self.chosen_ngrams]
         self.pruned_word_frequencies = {w:self.word_frequencies[w] for w in self.chosen_ngrams}
             
@@ -219,8 +219,8 @@ class InformationGain(BaseFeatureExtractor):
             return best_keys
 
         self.chosen_ngrams = create_sorted_word_frequencies(self.IG)
-        print self.chosen_ngrams
-        print [self.IG[x] for x in self.chosen_ngrams]
+        #print self.chosen_ngrams
+        #print [self.IG[x] for x in self.chosen_ngrams]
         self.chosen_columns = [self.word_to_int[x] for x in self.chosen_ngrams]
         self.pruned_word_frequencies = {w:self.word_frequencies[w] for w in self.chosen_ngrams}
 
@@ -291,8 +291,8 @@ class TFIDF(BaseFeatureExtractor):
         else:
             self.chosen_ngrams = create_sorted_word_frequencies(self.tfidf_array)
 
-        print self.chosen_ngrams
-        print [self.tfidf_array[x] for x in self.chosen_ngrams]
+        #print self.chosen_ngrams
+        #print [self.tfidf_array[x] for x in self.chosen_ngrams]
         self.chosen_columns = [self.word_to_int[x] for x in self.chosen_ngrams]
         self.pruned_word_frequencies = {w:self.word_frequencies[w] for w in self.chosen_ngrams}
 
