@@ -28,8 +28,8 @@
 
 \begin{document}
 \title{\bf Twitter-based Mood Evaluation
-	\thanks{$^*$Chemical Engingeering Department, MIT. Email: \href{mailto:vishnusr@mit.edu}{vishnusr@mit.edu}}
-	\thanks{$^\dag$Laboratory of Information and Decision Systems, MIT. Email: \href{mailto:pratikac@mit.edu}{pratikac@mit.edu}}
+	\thanks{$^*$Chemical Engingeering Department, MIT.\newline Email: \href{mailto:vishnusr@mit.edu}{vishnusr@mit.edu}}
+	\thanks{$^\dag$Laboratory of Information and Decision Systems, MIT.\newline Email: \href{mailto:pratikac@mit.edu}{pratikac@mit.edu}}
 	\thanks{Note: Equal contribution from both authors}
 }
 \author{Vishnu Sresht$^*$ \qquad Pratik Chaudhari$^\dag$}
@@ -67,7 +67,9 @@ in the short term) and therefore, a snippet from fmylife.com with a negative
 score represents a positive sentiment.
 
 The score for each snippet is calculated from the numbers of upvotes and
-downvotes received by the snippet (on its source site) using Wilson's interval score~\cite{miller_interval}. This algorithm calculates the lower bound of one-sided interval within which we
+downvotes received by the snippet (on its source site) using Wilson's interval score
+%~\cite{miller_interval}. 
+This algorithm calculates the lower bound of one-sided interval within which we
 can claim (with a given confidence) that the true value of (positive
 votes)/(total votes) lies. One of the key assumptions involved in scoring the snippets this way is that `value' of one vote is the same across the different source sites. 
 
@@ -82,14 +84,14 @@ In this section, we discuss methods used to clean a word corpus to enable effici
 \end{quote}
 A typical document in our dataset contains a number of words such as articles, time of the day, and propositions, which are inconsequential to the task of classification. We therefore perform a process called ``tokenization and stemming'' of each document. This consists of the following steps:
 \enum{1.}{
-\item Break the document into individual sentences,
-\item Keep only words which do not include any digits and are more than three letters long,
-\item Filter out using a stop word dictionary which consists of common articles, propositions, etc.,
+\item Break the document into individual sentences.
+\item Keep only words which do not include any digits and are more than three letters long.
+\item Filter out using a stop word dictionary which consists of common articles, propositions, etc.
 \item Tag each word using its appropriate part of speed in the sentence. An HMM-based model is used to estimate the correct part of speech for every word. We only use nouns, adjectives and verbs in our analysis.
 \item Lemmatize the resulting words: this process converts words such as ``studying'' to ``study'', ``boyfriend's'' to ``boyfriend'' etc. This is an essential step to ensure a good vocabulary construction.
 }
 
-A Python based natural language processing library, \href{http://www.nltk.org}{NLTK} was used for steps $3,4,5$ mentioned above. It uses words from \href{http://wordnet.princeton.edu}{Wordnet} to lemmatize and tokenize words in a corpus. The final result of running this sequence of steps on the document described above is the following set of words which quite succintly captures the incident in the elevator!
+A Python based natural language processing library, \href{http://www.nltk.org}{NLTK} was used for steps $3,4,5$ mentioned above. It uses words from \href{http://wordnet.princeton.edu}{Wordnet} to lemmatize and tokenize words in a corpus. The final result of running this sequence of steps on the document described above is the following set of words which quite succinctly captures the incident in the elevator!
 \begin{quote}
 \emph{attractive, come, cute, elevator, friend, girl, guy, lying, phone, say, tell, today, want}
 \end{quote}
@@ -158,14 +160,21 @@ We note that this approach gives the best performance for a number of algorithms
 \label{sec:prelim}
 
 This section uses the feature representation created in Sec.~\ref{sec:features} and shows an analysis of various algorithms and features on the data.
-For the algorithms discussed in this section, we used a popular Python library for machine learning called $\tt scikit\_learn$~\cite{scikit-learn}. This library has very efficient and well documented implementations of algorithms which makes it possible to evaluate the performance with different values of parameters. We analyse the data using four different algorithms as described below:
+For the algorithms discussed in this section, we used a popular Python library for machine learning called $\tt scikit\_learn$~\cite{scikit-learn}. This library has very efficient and well documented implementations of algorithms which makes it possible to evaluate the performance with different values of parameters. We analyse the data using four different algorithms as described below. Note that the parameters of these algorithms were tuned manually using $3$-fold cross-validation and we report the results using the best parameters for the various feature representations.
 
 \subsection{Support Vector Machine}
 \label{ssec:svm}
 
+We use the standard SVM introduced in the class with regularization. The regularization parameter $C$ was chosen using cross-validation. Note that using a large value of $C$ is beneficial because the feature vectors are sparse binary strings, i.e., almost all of them are away from the origin.
+
 \subsection{Principle Component Analysis}
 \label{ssec:pca}
 
+A few notes about our implementation are:
+\enum{1.}{
+\item We compute the percentage variance in the dataset that can be attributed to each dimension of dataset and use it to select the number of components in PCA. As a result, we project the $200$-dimensional feature vector down to about 50 components.
+\item 
+}
 
 \subsection{Adaboost}
 \label{ssec:adaboost}
@@ -190,6 +199,31 @@ h(w_1, \ldots, w_n) = \arg \max_{c \in \{ +, - \} }\ \PP(c) \prod_{i=1}^n \PP(w_
 $$
 
 In other words, it considers unigrams as independent of each other. Strictly speaking, this is not correct. As Fig.~\ref{fig:pos_cloud} and Fig.~\ref{fig:neg_cloud} show, there are quite a few common words in both data sets and a word like \emph{boyfriend} only shows a markedly different frequency in the two classes. However, for large amounts of data, this effect is less pronounced and we still obtain good classification.
+
+\subsection{Discussion}
+\label{ssec:discussion}
+
+%\begin{table*}
+%\centering
+%\begin{tabular}{|c|c|c|}
+%\hline
+%A & B & C\\
+%\hline
+%1 & 2 & 3\\
+%\hline
+%\end{tabular}
+%\end{table*}
+
+\begin{table*}
+\centering
+\begin{tabular}{ |c|c|c|c|c| }
+  \hline
+  Feature & SVM & PCA & Adaboost & Naive Bayes \\[0.03in]
+  \hline
+  WF & 0.957 & 0.957 & 0.694 & 0.937\\
+  \hline
+\end{tabular}
+\end{table*}
 
 \section{Latent topics}
 \label{sec:latent}

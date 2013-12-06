@@ -4,7 +4,7 @@ import sys
 
 
 # construct algorithms
-algorithms = [run_svm, run_pca, run_naive_bayes]
+algorithms = [run_svm, run_pca, run_adaboost, run_naive_bayes]
 
 create_features = 0
 features = []
@@ -38,8 +38,10 @@ def run_all_tests():
             print feature.__class__.__name__, alg.__name__, alg(X,y)
 
 def run_one_test(feature, alg):
-    X, y = feature.f_vector, feature.scores
-    print alg(X,y)
+    for f in feature:
+        for a in alg:
+            X, y = f.f_vector, f.scores
+            print f.__class__.__name__, a.__name__, a(X,y)
 
-#run_one_test(features[3], algorithms[2])
-run_all_tests()
+run_one_test(features, [algorithms[2]])
+#run_all_tests()
