@@ -84,8 +84,12 @@ class gaussian_process():
 def test():
     gp = gaussian_process(100, -1, 1)
     predictions = []
+    
+    pf, nf, pl, nl = gp.pos_features, gp.neg_features, gp.pos_labels, gp.neg_labels
     pf,nf,pl,nl = gp.bootstrap(0.1)
     print len(pf), len(nf)
+    gp.pos_features, gp.neg_features, gp.pos_labels, gp.neg_labels = gp.bootstrap(0.7)
+
     for fv in pf:
         t1 = gp.predict(fv)
         predictions.append(t1)
