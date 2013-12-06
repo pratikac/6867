@@ -236,7 +236,6 @@ Table~\ref{tab:feature_alg} shows the mean of $3$-fold cross-validation scores f
 \item We have used a weighted version of SVM in our implementation, i.e, each data point is weighted by the confidence estimate
 \item Estimates for PCA are very close to those of SVM in spite of having a large reduction in the dimensionality. The number of dimensions in PCA is just 50 as compared to 200 in SVM.
 \item Gain Ratio seems to perform better than other approaches such as WF and TF-IDF. This is consistent with the numbers reported in literature.
-\item 
 \end{itemize}
 
 We note that the success ratio in every case is very large. It is surprising that this shows a marked dissimilarity to numbers reported in literature. In most papers, approaches that involve a combination of SVM and TFIDF show a success ratio of 0.82. In fact, this is precisely the kind of numbers that we get if we include only data from FML, LML and MLIG. If we include the data from the Twitter dataset, which is tagged manually, we get much higher prediction success. This can be attributed to the fact that upvotes and downvotes on these websites incorporate elements such as sarcasm, mockery etc. The scoring and confidence estimates that we compute from these are skewed do to this.
@@ -281,9 +280,12 @@ where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a 
 &\sim \sum_{r \in R_+} \exp \left( -\gamma \min_j [ d(s, p_j) + d(r, p_j)] \right)\\
 &\sim \sum_{r \in R_+} \exp \left(-C\ \gamma d(s,r) \right).
 }
-The second last approximation is obtained as follows: We see that for a large $\gamma$, the summation $\sum_{j=1}^n$ is dominated by the term with the minimum exponent. On the other hand, the last approximation is obtained by noting that the minimum over all terms of the form $[ d(s, p_j) + d(r, p_j)]$ over all signals in $p$ is of the form $C d(s,r)$ for some $C > 0$ and is achieved at $p^* = (s+r)/2$. It is easy to see that this is a valid approximation when the latent source $p_{j^*}$ is close to the global minimizer $p^*$.
+The second last approximation is obtained as follows: We see that for a large $\gamma$, the summation $\sum_{j=1}^n$ is dominated by the term with the minimum exponent. On the other hand, the last approximation is obtained by noting that the minimum over all terms of the form $[ d(s, p_j) + d(r, p_j)]$ over all signals in $p$ is of the form $C d(s,r)$ for some $C > 0$ and is achieved at $p^* = (s+r)/2$. It is easy to see that this is a valid approximation when the latent source $p_{j^*}$ is close to the global minimizer $p^*$. We can approximate $\PP(- \given s)$ similarly. We can however, also use the weights of each document that were obtained in Sec.~\ref{ssec:scoring} to get a weighted average of elements in $R_+$ as
+$$
+\PP(+ \given s) \sim \sum_{r \in R_+} y_r \exp \left(-C\ \gamma d(s,r) \right).
+$$
 
-We can approximate $\PP(- \given s)$ similarly. The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, we tuned $\theta$ and set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$ (cite the walmart pregnancy example here).
+The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, we tuned $\theta$ and set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$ (cite the walmart pregnancy example here).
 
 \section{Conclusions}
 \label{sec:conclusions}
