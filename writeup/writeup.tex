@@ -210,6 +210,7 @@ PCA works by computing a singular value decomposition of the dataset and keeps o
 \enum{1}{
 \item It is often problematic to decide the size of for the reduced sub-space. In our implementation, we compute the percentage variance in the dataset that can be attributed to each dimension of dataset and use it to select the number of components in PCA. As a result, we project the $200$-dimensional feature vector down to about 50 components.
 \item We use the implementation of PCA provided by $\tt scikit-learn$. We also process the data to remove the mean of the dataset from every data point. This enables the SVD to converge well in practice.
+\item We run SVM on the reduced dataset to predict the labels of the datapoints.
 }
 
 
@@ -333,11 +334,7 @@ Fig.~\ref{fig:map} shows the mood map of USA at about midnight of Thursday, Dec.
 }
 
 \section{Conclusions}
-This paper used novel data corpora from websites such as FML and MLIG that are already tagged according to the sentiment by users. We employ a number of feature representations on this dataset 
-
-we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. 
-We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.
-
+This paper used novel data corpora from websites such as FML and MLIG that are pre-tagged with sentiment by users. We employ a number of feature representations on this dataset based on the word frequency, information ratio gain and TF-IDF to compare and constrast various supervised learning algorithms such as SVM, PCA-SVM, Adaboost and Naive Bayes classifier. We also introduced a model for tweets generated from hidden topics and a discriminative classifer to classify them. Finally, we incorporate live streaming data from Twitter to gauge the mood the country using the above sources as training data.
 \bibliography{writeup}
 \bibliographystyle{unsrt}
 
