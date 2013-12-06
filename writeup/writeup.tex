@@ -289,6 +289,7 @@ $$
 The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$ (cite the walmart pregnancy example here).
 
 \paragraph{Results}
+pos = 0.8821, 0.9541
 
 \section{Conclusions}
 \label{sec:conclusions}
