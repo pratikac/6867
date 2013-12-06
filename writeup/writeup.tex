@@ -39,11 +39,11 @@
 \small{By providing a convenient, readily-accessible way to reach out to a
     global audience, Twitter has revolutionized the way we broadcast our
     feelings to the rest of the world. In this paper, we guess the mood of a
-    tweet, i.e., we determinine `how positive people feel' at any given moment
+    tweet, i.e., we determining `how positive people feel' at any given moment
     through an analysis of their tweets. To this end, we introduce a novel
     source of already classified text corpora for use as training data. Sites
     like \href{http://mylifeisg.com}{My Life Is G} and
-    \href{http://fmylife.com}{FML} are a hiherto unutilized source of
+    \href{http://fmylife.com}{FML} are a hitherto unutilized source of
     crowd-curated, well classified training data of text snippets of
     appropriate length. We study the relative efficacies of several commonly
     employed classification algorithms, including SVM, PCA
@@ -58,7 +58,7 @@
 \section{Introduction}
 \label{sec:intro}
 In its recent IPO filing, Twitter disclosed to investors that it made a
-staggering USD 47.5 million by selling it's data to third-party data analyists
+staggering USD 47.5 million by selling it's data to third-party data analysts
 \cite{wsj_twitter}. The recent purchase of the tweet data-mining startup Topsy,
 and the popularity of Coursera's online course on Social Network Analysis
 bolsters the claim that analyzing social media is both intellectually exciting
@@ -165,7 +165,7 @@ On a more serious note, a lot of words overlap in the two sets, i.e., a naive al
 \section{Feature representation}
 \label{sec:features}
 
-From the preceeding section, we obtain a set of short documents, let us cay them $D = \{d_1, d_2, \ldots, d_m\}$, with each document $i$ containing a possibly different set of words $w_{i} = \{w_{i,1}, w_{i, 2}, \ldots, w_{i, n_i} \}$. The purpose of this section is to select a good vocabulary of $n$ words, call it $W^*$, from the combined set of words, $W = \{w_1, \ldots, w_m\}$. Given such a set, we obtain a feature vector of length $n$ for every document $d_i$, say $x_i$.
+From the proceeding section, we obtain a set of short documents, let us cay them $D = \{d_1, d_2, \ldots, d_m\}$, with each document $i$ containing a possibly different set of words $w_{i} = \{w_{i,1}, w_{i, 2}, \ldots, w_{i, n_i} \}$. The purpose of this section is to select a good vocabulary of $n$ words, call it $W^*$, from the combined set of words, $W = \{w_1, \ldots, w_m\}$. Given such a set, we obtain a feature vector of length $n$ for every document $d_i$, say $x_i$.
 $$
 x_i[j] = \begin{cases}
 	1 & \trm{ if } w_{i,j} \in W \\
@@ -191,11 +191,11 @@ The vocabulary $W^*$, is then set of words with $n$ highest frequencies.
 
 \paragraph{Information Gain}
 \label{ssec:ig}
-Information gain is a criterion that quantifies the quality of a feature, i.e., it measures the information required for class prediction of a document based on the persence or absence of a feature. It can be calculated by the decrease in entropy of the data if the feature is included. The information of a set of documents, $D$ is simply,
+Information gain is a criterion that quantifies the quality of a feature, i.e., it measures the information required for class prediction of a document based on the presence or absence of a feature. It can be calculated by the decrease in entropy of the data if the feature is included. The information of a set of documents, $D$ is simply,
 $$
 H(D) = -p_+ \log p_+ - p_- \log p_-
 $$
-where $p_+ = \PP(+ | d), p_- = \PP(- | d)$ for some arbitary document $d$. In our work, we compute this as $p_+ = \abs{D_+}/\abs{D}$ and similarly for $p_-$, where $D_+$ is the set of all documents tagged as $+$. For $n$-dimensional feature set $X$, we compute
+where $p_+ = \PP(+ | d), p_- = \PP(- | d)$ for some arbitrary document $d$. In our work, we compute this as $p_+ = \abs{D_+}/\abs{D}$ and similarly for $p_-$, where $D_+$ is the set of all documents tagged as $+$. For $n$-dimensional feature set $X$, we compute
 $$
 H(D_+ | w) = -\sum_{i=1}^n p_+(w) H(+ | w)
 $$
@@ -222,7 +222,7 @@ We also used an approach inspired by a popular method of constructing small voca
 $$
 idf(w) = \log \left[ \frac{\abs{D}}{\abs{\{d: w \in w_d \}}} \right].
 $$
-The denominator here is the number of documents that a word $w$ appears in. Thus $idf$ penalises words which occur very frequently in documents. The vocabulary $W^*$ is constructed using the words with the highest value of the product $tf(w) * idf(w)$. In conventional TF-IDF formulations, each document has a large number of repeated words, e.g, research papers, which is not true in our case.
+The denominator here is the number of documents that a word $w$ appears in. Thus $idf$ penalizes words which occur very frequently in documents. The vocabulary $W^*$ is constructed using the words with the highest value of the product $tf(w) * idf(w)$. In conventional TF-IDF formulations, each document has a large number of repeated words, e.g, research papers, which is not true in our case.
 
 We note that this approach gives the best performance for a number of algorithms tested in this report.
 
@@ -230,7 +230,7 @@ We note that this approach gives the best performance for a number of algorithms
 \label{sec:results}
 
 This section uses the feature representation created in Sec.~\ref{sec:features} and shows an analysis of various algorithms and features on the data.
-For the algorithms discussed in this section, we used a popular Python library for machine learning called $\tt scikit\_learn$~\cite{scikit-learn}. This library has very efficient and well documented implementations of algorithms which makes it possible to evaluate the performance with different values of parameters. We analyse the data using four different algorithms as described below. Note that the parameters of these algorithms were tuned manually using $3$-fold cross-validation and we report the results using the best parameters for the various feature representations.
+For the algorithms discussed in this section, we used a popular Python library for machine learning called $\tt scikit\_learn$. This library has very efficient and well documented implementations of algorithms which makes it possible to evaluate the performance with different values of parameters. We analyze the data using four different algorithms as described below. Note that the parameters of these algorithms were tuned manually using $3$-fold cross-validation and we report the results using the best parameters for the various feature representations.
 
 \subsection{Support Vector Machine (SVM)}
 \label{ssec:svm}
@@ -246,18 +246,19 @@ PCA works by computing a singular value decomposition of the dataset and keeps o
 \enum{1}{
 \item It is often problematic to decide the size of for the reduced sub-space. In our implementation, we compute the percentage variance in the dataset that can be attributed to each dimension of dataset and use it to select the number of components in PCA. As a result, we project the $200$-dimensional feature vector down to about 50 components.
 \item We use the implementation of PCA provided by $\tt scikit-learn$. We also process the data to remove the mean of the dataset from every data point. This enables the SVD to converge well in practice.
-\item We run SVM on the reduced dataset to predict the labels of the datapoints.
+\item We run SVM on the reduced dataset to predict the labels of the data points.
 }
 
 
 \subsection{Adaboost}
 \label{ssec:adaboost}
 %
-Adaboost is a popular algorithm introduced by Freud and Schapire in~\cite{freund1999short}. The idea here is to fit a sequence of weak learners, e.g., one dimensional decision trees on slightly modified versions of the same data set. The predictions from all these weak learners (along with weights) are collected together to obtain the final classifier. The mathematical formulation and the algorithm is the same as what discussed in the class, in particular this algorithm uses an exponential loss function and uses it as an upper bound for the prediction error.
-
+Adaboost is a popular algorithm introduced by Freud and Schapire in~\cite{freund1999short}. The idea here is to fit a sequence of weak learners, e.g., one dimensional decision trees on slightly modified versions of the same data set. 
+The predictions from all these weak learners (along with weights) are collected together to obtain the final classifier. The mathematical formulation and the algorithm is the same as what discussed in the class, in particular this algorithm uses an exponential loss function and uses it as an upper bound for the prediction error.
+%
 In our work, we used Decision Trees with a depth of 1, i.e., one dimensional Decision Trees as weak learners in Adaboost. The number of weak learners was set to be 25 after checking a few different values to provide a good tradeoff between training time and prediction accuracy.
 
-\subsection{Naive Bayes classifer (NB)}
+\subsection{Naive Bayes classifier (NB)}
 \label{ssec:naive_bayes}
 %
 We are interested in calculating the probability of a label $+$ given all the words in a document, i.e., $\PP(+ \given w_1, \ldots, w_n)$. This can be written as,
@@ -265,11 +266,11 @@ We are interested in calculating the probability of a label $+$ given all the wo
 \PP(+ \given w_1, \ldots, w_n) &= \frac{\PP(+)\ \PP(w_1, \ldots, w_n \given + )}{\PP(w_1, \ldots, w_n)}\\
 &\propto \PP(+, w_1, \ldots, w_n).
 }
-The numerator is a product of the prior probability of a class $+$ and the likelihood of generating $w_1, \ldots, w_n$ given $+$ to obtain the posterior on the left hand side. The Naive Bayes classifer works on the simple premise that the joint probability can be factorized as
+The numerator is a product of the prior probability of a class $+$ and the likelihood of generating $w_1, \ldots, w_n$ given $+$ to obtain the posterior on the left hand side. The Naive Bayes classifier works on the simple premise that the joint probability can be factorized as
 $$
 \PP(+, w_1, \ldots, w_n) = \PP(+) \prod_{i=1}^n \PP(w_i \given +)
 $$
-i.e., the probabiltiy of generating a class $+$ from individual words $w_i$ is independent of some other word $w_j$. A classifier can be obtained easily from this argument as
+i.e., the probability of generating a class $+$ from individual words $w_i$ is independent of some other word $w_j$. A classifier can be obtained easily from this argument as
 $$
 h(w_1, \ldots, w_n) = \arg \max_{c \in \{ +, - \} }\ \PP(c) \prod_{i=1}^n \PP(w_i \given c)
 $$
@@ -310,9 +311,9 @@ We note that the success ratio in every case is very large. It is surprising tha
 \section{Latent topics}
 \label{sec:latent}
 
-The previous section demonstrated the performance of various classifers on the feature representations obtained from the data. This section builds upon the idea that words in a document are results of a few latent topics. In other words, rather than training a classifer to distinguish between words, we train it to distinguish between latent topics. The analysis in this section is inspired by~\cite{nikolov2012nonparametric}.
+The previous section demonstrated the performance of various classifiers on the feature representations obtained from the data. This section builds upon the idea that words in a document are results of a few latent topics. In other words, rather than training a classifier to distinguish between words, we train it to distinguish between latent topics. The analysis in this section is inspired by~\cite{nikolov2012nonparametric}.
 
-This idea has been pursued in literature in a number of different ways. Let us note a popular line of research that introduces supervised learning for topic models~\cite{blei2010supervised}. The idea here is to classify using 
+This method has been used in literature in a number of places. In particular~\cite{blei2010supervised} demonstrated a Latent Dirichlet Allocation scheme for a supervised learning algorithm, where they classify using the estimates of th hidden topics instead of the actual words. 
 
 Suppose that for the two classes, $+$ (documents that express positive sentiment) and $-$ (documents that express a negative sentiment), we have a set of latent topics. Let $p = \{ p_1, \ldots, p_m \}$ be the topics that result in words associated with $+$ and $q = \{ q_1, \ldots, q_n \}$ be the topics that result in words associated with $-$. Each sentiment $+$, $-$ is a noisy observation based upon these latent topics. However, we do not know what these topics are and hence we create a simple model for them.
 
@@ -320,7 +321,7 @@ Denote the words in a document by $s$. Let the probability of generating an obse
 $$
 \PP(s\ \trm{generated from}\ p) \propto e^{-\gamma\ d(s, p)}
 $$
-where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a tunable parameter. Note that we need $d(s,p)$ to be symmetric. In our work, we use the Hamming distance between two feature representations as the function $d(\cdot, \cdot)$. We make use of the set of observations, i.e., words in documents to classify a new document. Let $R_+$ be the set of all reference documents that are maked as $+$, $R_-$ is defined similarly. The probability of a new signal $s$ belonging to $+$ is then,
+where $d(s,p)$ is some positive definite function that metric and $\gamma$ is a tunable parameter. Note that we need $d(s,p)$ to be symmetric. In our work, we use the Hamming distance between two feature representations as the function $d(\cdot, \cdot)$. We make use of the set of observations, i.e., words in documents to classify a new document. Let $R_+$ be the set of all reference documents that are marked as $+$, $R_-$ is defined similarly. The probability of a new signal $s$ belonging to $+$ is then,
 
 \aeqs{
 \PP(+ \given s) &= \sum_{r \in R_+}\ \PP(s\ \trm{in}\ +, s\ \trm{shares a latent source with } r)\\
@@ -339,7 +340,7 @@ The second last approximation is obtained as follows: We see that for a large $\
 %\PP(+ \given s) \sim \sum_{r \in R_+} y_r \exp \left(-C\ \gamma d(s,r) \right).
 %$$
 
-The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$, a funny example of where this was not done would be~\cite{target_pregnant}.
+The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the training data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$, a funny example of where this was not done would be~\cite{target_pregnant}.
 
 \paragraph{Results}
 We bootstraped the data to perform cross-validation and computed the prediction error on a randomly sampled subset of the data. The size of the bootstrapped data is 0.7 times the original dataset and the size of the test data is 0.2 times that of the original dataset. We did this because computing the discriminative classifier is prohibitive for a large dataset. We obtain a success ratio of 0.874 for classifying positive samples and 0.96 for classifying negative samples. This is consistent with the fact that we set $\theta = 1.25$, we are more conservative while classifying a sentiment as positive.
@@ -360,10 +361,14 @@ Fig.~\ref{fig:map} shows the mood map of USA at about midnight of Thursday, Dec.
 \enum{1.}{
 \item Some cities are also clearly more happy than others. In particular, note that Chicago on the west coast of Lake Superior is extremely happy while Detroit, a little right to it, on the boundary of Lake Michigan is not that happy. The east coast, in particular, New York has a lot of green data points, while Boston seems to be particularly unhappy, keeping with the angry-Bostoners stereotype.
 %
-\item Southern California with a much warmer weather is noticably happier than San Francisco.
+\item Southern California with a much warmer weather is noticeably happier than San Francisco.
 }
+
 \section{Conclusions}
-This paper used novel data corpora from websites such as FML and MLIG that are pre-tagged with sentiment by users. We employ a number of feature representations on this dataset based on the word frequency, information ratio gain and TF-IDF to compare and constrast various supervised learning algorithms such as SVM, PCA-SVM, Adaboost and Naive Bayes classifier. We also introduced a model for tweets generated from hidden topics and a discriminative classifer to classify them. Finally, we incorporate live streaming data from Twitter to gauge the mood the country using the above sources as training data.
+This paper used novel data corpora from websites such as FML and MLIG that are pre-tagged with sentiment by users. We employ a number of feature representations on this dataset based on the word frequency, information ratio gain and TF-IDF to compare and contrast various supervised learning algorithms such as SVM, PCA-SVM, Adaboost and Naive Bayes classifier. We also introduced a model for tweets generated from hidden topics and a discriminative classifier to classify them. Finally, we incorporate live streaming data from Twitter to gauge the mood the country using the above sources as training data.
+
+Note that all the code used to generate the results discussed in this report is hosted at \href{https://github.com/pratikac/6867}{https://github.com/pratikac/6867}.
+
 \bibliography{writeup}
 \bibliographystyle{unsrt}
 
