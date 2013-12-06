@@ -36,12 +36,27 @@
 \maketitle
 
 \begin{abstract}
-\small{By providing a convenient, readily-accessible way to reach out to a global audience, twitter has revolutionized the way we broadcast our feelings to the rest of the world. In this paper, we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.}
+\small{By providing a convenient, readily-accessible way to reach out to a global audience, Twitter has revolutionized the way we broadcast our feelings to the rest of the world. In this paper, we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.}
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
-In its recent IPO filing, Twitter disclosed to investors that it made a staggering USD 47.5 million by selling it's data to third-party data analyists \cite{wsj_twitter}. The recent purchase of the tweet data-mining startup Topsy, and the popularity of Coursera's online course on Social Network Analysis  bolsters the claim that analyzing social media is both intellectually exciting and financially lucrative \cite{russell2011mining}. As noted by several authors,\cite{ediger2010massive} social media has become the dominant medium for the convection of thought, opinions, and memes. The implication of these network effects can make or break the case for a new brand - so much so that viral marketing on sites like Twitter has become one of the mainstays in the arsenal of the modern day publicist \cite{richardson2002mining}. Through this project, we attempt to leverage two separate sources of short, user contributed, `status updates` to gauge the geospatial distribution of happiness. The first of these sources is a series of sites where users post anecdotal snippets indicating their current state of mind, and the second is a corpus of geo-coded tweets obtained from the Twitter analytics startup Topsy.
+In its recent IPO filing, Twitter disclosed to investors that it made a
+staggering USD 47.5 million by selling it's data to third-party data analyists
+\cite{wsj_twitter}. The recent purchase of the tweet data-mining startup Topsy,
+and the popularity of Coursera's online course on Social Network Analysis
+bolsters the claim that analyzing social media is both intellectually exciting
+and financially lucrative \cite{russell2011mining}. As noted by several
+authors,\cite{ediger2010massive} social media has become the dominant medium
+for the convection of thought, opinions, and memes. The implication of these
+network effects can make or break the case for a new brand - so much so that
+viral marketing on sites like Twitter has become one of the mainstays in the
+arsenal of the modern day publicist \cite{richardson2002mining}. Through this
+project, we attempt to leverage two separate sources of short, user
+contributed, `status updates` to gauge the geospatial distribution of
+happiness. The first of these sources is a series of sites where users post
+anecdotal snippets indicating their current state of mind, and the second is a
+corpus of geo-coded tweets obtained from the Twitter analytics startup Topsy.
 
 
 
@@ -51,13 +66,21 @@ In its recent IPO filing, Twitter disclosed to investors that it made a staggeri
 \subsection{Data crawler}
 \label{ssec:crawler}
 
-We used a variety of Python libraries to scrape data from certain websites which contain well classified data tagged with sentiments.
-\paragraph{MLIG}
-Web 3.0 has given birth to a popular website \href{http://mylifeisg.com}{MLIG} which enables people to post short messages expressing how good their life at that particular moment. These documents are a perfect corpora for our purpose since they are tagged by sentiment. This website also enables other uses to rate the particular comment as ``average'' or ``meh'' (lame). We use this to compute a confidence level of the level of positivity for a document. We used another website called LML to obtain positively tagged documents. \pcm{This website has been taken down since some time and we used an internet archive to scrape data from it.}{fix}
-\paragraph{FML, LML}
-Similar to MLIG, there is a host of other websites like, \href{fmylife.com}{FML} and  that 
-\paragraph{Twitter test data}
-We used the API for \href{topsy.com}{Topsy} to obtain 1000 geo-tagged tweets in the country. The policies of Topsy for a free account unfortunately limit us to this number.
+We used a variety of Python libraries to scrape data from user curated websites
+this contain well classified data tagged with sentiments.  \paragraph{MLIG}
+Web 3.0 has given birth to a popular website \href{http://mylifeisg.com}{MLIG}
+which enables people to post short messages expressing how good their life at
+that particular moment. These documents are a perfect corpora for our purpose
+since they are tagged by sentiment. This website also enables other uses to
+rate the particular comment as ``average'' or ``meh'' (lame). We use this to
+compute a confidence level of the level of positivity for a document. We used
+another website called LML to obtain positively tagged documents. \pcm{This
+    website has been taken down since some time and we used an internet archive
+    to scrape data from it.}{fix} \paragraph{FML, LML} Similar to MLIG, there
+is a host of other websites like, \href{fmylife.com}{FML} and  that
+\paragraph{Twitter test data} We used the API for \href{topsy.com}{Topsy} to
+obtain 1000 geo-tagged tweets in the country. The policies of Topsy for a free
+account unfortunately limit us to this number.
 
 \subsection{Scoring and Confidence estimation}
 \label{ssec:scoring}
