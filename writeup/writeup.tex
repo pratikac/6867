@@ -17,14 +17,14 @@
 \newcommand{\ignore}[1]{}
 
 % save space
-\newcommand{\algsize}{\footnotesize}
-\setlength{\floatsep}{0.05in}
-\setlength{\textfloatsep}{0.1in}
-\setlength{\intextsep}{0.05in}
-\setlength{\belowcaptionskip}{0.01in}
-\setlength{\abovecaptionskip}{0.1in}
-\setlength{\abovedisplayskip}{0.08in}
-\setlength{\belowdisplayskip}{0.08in}
+%\newcommand{\algsize}{\footnotesize}
+%\setlength{\floatsep}{0.05in}
+%\setlength{\textfloatsep}{0.1in}
+%\setlength{\intextsep}{0.05in}
+%\setlength{\belowcaptionskip}{0.01in}
+%\setlength{\abovecaptionskip}{0.1in}
+%\setlength{\abovedisplayskip}{0.08in}
+%\setlength{\belowdisplayskip}{0.08in}
 
 \begin{document}
 \title{\bf Twitter-based Mood Evaluation
@@ -36,7 +36,7 @@
 \maketitle
 
 \begin{abstract}
-By providing a convenient, readily-accessible way to reach out to a global audience, twitter has revolutionized the way we broadcast our feelings to the rest of the world. In this paper, we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.
+\small{By providing a convenient, readily-accessible way to reach out to a global audience, twitter has revolutionized the way we broadcast our feelings to the rest of the world. In this paper, we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.}
 \end{abstract}
 
 \section{Introduction}
@@ -204,11 +204,14 @@ We use the standard SVM introduced in the class with regularization. The regular
 \subsection{Principle Component Analysis (PCA)}
 \label{ssec:pca}
 
-A few notes about our implementation are:
-\enum{1.}{
-\item We compute the percentage variance in the dataset that can be attributed to each dimension of dataset and use it to select the number of components in PCA. As a result, we project the $200$-dimensional feature vector down to about 50 components.
-\item 
+We were keen on using PCA because the feature vectors in our dataset are extremely sparse. We would like to understand what dimensions of data are particularly useful for a discriminative classifier and keep only those. This should reduce the performance of a discriminative classifier, say SVM slightly, but the tradeoff of computational complexity versus accuracy heavily favors dimensionality reduction in such problems.
+
+PCA works by computing a singular value decomposition of the dataset and keeps only the eigenvectors that are (i) larger than a certain threshold or, (ii) the top few eigenvectors. A few notes about our approach:
+\enum{1}{
+\item It is often problematic to decide the size of for the reduced sub-space. In our implementation, we compute the percentage variance in the dataset that can be attributed to each dimension of dataset and use it to select the number of components in PCA. As a result, we project the $200$-dimensional feature vector down to about 50 components.
+\item We use the implementation of PCA provided by $\tt scikit-learn$. We also process the data to remove the mean of the dataset from every data point. This enables the SVD to converge well in practice.
 }
+
 
 \subsection{Adaboost}
 \label{ssec:adaboost}
@@ -311,8 +314,6 @@ The crux of this approach is that we cannot compare observations, i.e., words in
 \paragraph{Results}
 We bootstraped the data to perform cross-validation and computed the prediction error on a randomly sampled subset of the data. The size of the bootstrapped data is 0.7 times the original dataset and the size of the test data is 0.2 times that of the original dataset. We did this because computing the discriminative classifier is prohibitive for a large dataset. We obtain a success ratio of 0.874 for classifying positive samples and 0.96 for classifying negative samples. This is consistent with the fact that we set $\theta = 1.25$, we are more conservative while classifying a sentiment as positive.
 
-\section{Test Data}
-\label{sec:test_data}
 
 \begin{figure*}
 \centering
@@ -321,9 +322,20 @@ We bootstraped the data to perform cross-validation and computed the prediction 
 \label{fig:map}
 \end{figure*}
 
+\section{Test Data}
+\label{sec:test_data}
+
+Fig.~\ref{fig:map} shows the mood map of USA at about midnight of Thursday, Dec. 5$^{th}$. Note that the frequency of data points correlates highly with the population density of various areas. Also, some cities are clearly more twitter savvy than others as is evidenced by the complete lack of data points in the mid-west. 
+\enum{1.}{
+\item Some cities are also clearly more happy than others. In particular, note that Chicago on the west coast of Lake Superior is extremely happy while Detroit, a little right to it, on the boundary of Lake Michigan is not that happy. The east coast, in particular, New York has a lot of green data points, while Boston seems to be particularly unhappy, keeping with the angry-Bostoners stereotype.
+%
+\item Southern California with a much warmer weather is noticably happier than San Francisco.
+}
 
 \section{Conclusions}
-\label{sec:conclusions}
+This paper used novel data corpora from websites such as FML and MLIG that are tagged according to the sentiment
+
+we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.
 
 \bibliography{writeup}
 \bibliographystyle{unsrt}
