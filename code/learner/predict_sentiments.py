@@ -4,6 +4,7 @@ feature_representations = imp.load_source('feature_representations', '../feature
 from feature_representations import *
 from run_learners import *
 import cPickle as pickle 
+import json
 
 testDataFileName = '../stream/test_data.json'
 
@@ -13,8 +14,9 @@ def test_vector(f):
     lat_long = []
     snippetIDs = []
     with open(testDataFileName, 'r') as snippetFile:
-        for snippet in snippetFile:
-            words_in_snippet = snippet['unigrams']
+        for line in snippetFile:
+            snippet = json.loads(line)
+            words_in_snippet = snippet['unigramList']
             word_presence = [1 if f.chosen_ngrams[i] in words_in_snippet else 0 for i in range(len(f.chosen_ngrams)) ]
             if all(x == 0 for x in word_presence):
                 continue
@@ -25,7 +27,12 @@ def test_vector(f):
 
     return (t_vector, lat_long, snippetIDs)
 
-
+def write_predicted_sentiment(f, a, yp):
+    outputFileName = 'predictions_'+f.__class__.__name__+'_'+a.__name__+'.json'
+    with open(outputFileName, 'w') as outFile:
+        for point in range(len(yp)):
+            outputJSON = {'sentiment': yp[point], 'ID': f.t_data['ID'][point], 'lat': f.t_data['lat_long'][point][0] , 'long': f.t_data['lat_long'][point][1], 't_vector': f.t_data['t_vector'][point]}
+            outFile.write(json.dumps(outputJSON)+"\n")
 
 
 # construct algorithms
@@ -61,15 +68,17 @@ else:
 
 def run_all_tests():
     for feature in features:
-        X, y = feature.f_vector, feature.scores
+        X, y, t = feature.f_vector, feature.scores, feature.t_data['t_vector']
         for alg in algorithms:
-            print feature.__class__.__name__, alg.__name__, alg(X,y)
+            results = alg(X,y,t)
+            print feature.__class__.__name__, alg.__name__, results[0:2]
+            write_predicted_sentiment(feature, result[2])
 
 def run_one_test(feature, alg):
-    for f in feature:
-        for a in alg:
-            X, y = f.f_vector, f.scores
-            print f.__class__.__name__, a.__name__, a(X,y)
+    X, y, t = feature.f_vector, feature.scores, feature.t_data['t_vector']
+    results = alg(X, y, t)
+    print feature.__class__.__name__, alg.__name__, results[0:2]
+    write_predicted_sentiment(feature, alg, results[2])
 
-run_one_test(features, [algorithms[2]])
+run_one_test(gr,run_svm)
 #run_all_tests()

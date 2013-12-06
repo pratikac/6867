@@ -43,55 +43,58 @@ class gaussian_process():
         b_pos_labels, b_neg_labels = [],[]
         
         for z in zip(self.pos_features, self.pos_labels):
-            if randf() > prob:
+            if randf() < prob:
                 b_pos_features.append(z[0])
                 b_pos_labels.append(z[1])
         
         for z in zip(self.neg_features, self.neg_labels):
-            if randf() > prob:
+            if randf() < prob:
                 b_neg_features.append(z[0])
                 b_neg_labels.append(z[1])
         return b_pos_features, b_neg_features, b_pos_labels, b_neg_labels 
 
-    def predict(self, Z):
-        C = 1
-        gamma = 1
+    def predict(self, z):
+        C = 1e-1
+        gamma = 1e-1
         theta = 1.25
         hamming_dist = lambda x,y : np.sum(np.abs(x-y))
         
         #pf,nf,pl,nl = self.bootstrap(0.3)
         pf,nf,pl,nl = self.pos_features, self.neg_features, self.pos_labels, self.neg_labels
-        yp = np.zeros(len(Z))
-        for i in xrange(len(Z)):
-            z = Z[i] 
-            p_pos_array = np.array([np.exp(-C*gamma*hamming_dist(z,fv)) for fv in pf])
-            p_neg_array = np.array([np.exp(-C*gamma*hamming_dist(z,fv)) for fv in nf])
-            p_pos = np.dot(p_pos_array, np.abs(pl))
-            p_neg = np.dot(p_neg_array, np.abs(nl))
-            
-            pdb.set_trace()
-            if p_neg <1e-10:
-                yp[i] = 1
+        ztile = np.tile(z, (len(pf), 1))
+        p_pos = np.sum(np.exp(-C*gamma*np.sum(np.abs(ztile - np.array(pf)), axis=1)))
+        ztile = np.tile(z, (len(nf), 1))
+        p_neg = np.sum(np.exp(-C*gamma*np.sum(np.abs(ztile - np.array(nf)), axis=1)))
+        
+        #pdb.set_trace()
+        #print p_pos_array.tolist()
+        #pdb.set_trace()
+        #print p_pos, p_neg
+        if p_pos<1e-10:
+            return -1
+        elif p_neg <1e-10:
+            return  1
+        else:
             ratio  = p_pos/p_neg
             if ratio > theta:
-                yp[i] = 1
+                return 1
             else:
-                yp[i] = -1
-        return yp
+                return -1
 
 def test():
     gp = gaussian_process(100, -1, 1)
     predictions = []
-    for fv in gp.pos_features:
+    pf,nf,pl,nl = gp.bootstrap(0.05)
+    print len(pf), len(nf)
+    for fv in pf:
         t1 = gp.predict(fv)
-        predictions += t1
-        print t1
+        predictions.append(t1)
     tmp1 = np.array(predictions)
     print 'pos_success: ', np.sum(np.where(tmp1 > 0))/float(len(predictions))
     
     predictions = []
-    for fv in gp.neg_features:
+    for fv in nf:
         t1 = gp.predict(fv)
-        predictions += t1
+        predictions.append(t1)
     tmp1 = np.array(predictions)
     print 'neg_success: ', np.sum(np.where(tmp1 < 0))/float(len(predictions))
