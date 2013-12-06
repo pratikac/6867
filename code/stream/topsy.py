@@ -1,10 +1,17 @@
+#
+# curl http://api.topsy.com/v2/metrics/geo.json\?maxtime\=1374540739\&mintime\=1373846400\&q\=lebron+james\&scope\=225\&apikey\=KMQJI24ZTLWX251HZCZLKTAM44P5UIIK > output.json
+#
 import time
 
 import requests
 import simplejson as json
 
-API_HOST = 'http://otter.topsy.com'
-API_KEY = 'KMQJI24ZTLWX251HZCZLKTAM44P5UIIK'
+#API_HOST = 'http://otter.topsy.com'
+API_HOST = 'http://api.topsy.com/v2'
+#API_KEY = 'KMQJI24ZTLWX251HZCZLKTAM44P5UIIK'
+
+    
+API_KEY = 'QZ6VOAE7IWGM635K2IMQAAAAAAJ7EXNEZBJAAAAAAAAFQGYA'
 DEFAULT_PERPAGE = 100
 
 try:
@@ -19,7 +26,7 @@ class Result(object):
         self._request = request
         self._data = json.loads(request.content)
         self.request = self._data['request']
-        self.__doc__ = getattr(Topsy,self.request['resource']).__doc__
+        self.__doc__ = getattr(Topsy, self.request['resource']).__doc__
         self.response = self._data['response']
         for k in self.response.keys():
             setattr(self, k, self.response[k])
@@ -74,9 +81,10 @@ class Topsy(object):
         params['apikey'] = self._api_key
         url = '%s/%s.json' % (self._api_host, resource)
         r = requests.get(url, params=params)
-        self._rate_limit = r.headers['x-ratelimit-limit']
-        self._rate_limit_remaining = r.headers['x-ratelimit-remaining']
-        self._rate_limit_reset = r.headers['x-ratelimit-reset']
+        print r.content
+        #self._rate_limit = r.headers['x-ratelimit-limit']
+        #self._rate_limit_remaining = r.headers['x-ratelimit-remaining']
+        #self._rate_limit_reset = r.headers['x-ratelimit-reset']
         return Result(request=r)
 
     def more(self, result):

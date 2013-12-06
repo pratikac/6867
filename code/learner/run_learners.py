@@ -13,21 +13,30 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.cross_validation import cross_val_score
 import pdb
 
-def run_svm(X, y):
+def run_svm(X, y, t=None):
     clf = svm.SVC(kernel='rbf',gamma=1.0, C=3)
     clf=clf.fit(X, np.sign(y), sample_weight=np.abs(y))
     
     scores = cross_val_score(clf, X, np.sign(y))
     yp = np.array([clf.predict(x)[0] for x in X])
     success = (yp == np.sign(y)).sum()/float(len(y))
-    return scores.mean(), success
+    if t is None: 
+        return scores.mean(), success
+    else:
+        yp = np.array([clf.predict(x)[0] for x in t])
+        return scores.mean(), success, yp
 
-def run_decision_tree(X, y):
+def run_decision_tree(X, y, t=None):
     clf = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=1, random_state=0)
     yp = np.array([clf.predict(x)[0] for x in X])
-    return (yp == np.sign(y)).sum()/float(len(y))
+    sucess = (yp == np.sign(y)).sum()/float(len(y))
+    if t is None: 
+        return success
+    else:
+        yp = np.array([clf.predict(x)[0] for x in t])
+        return success, yp
 
-def run_adaboost(X, y):
+def run_adaboost(X, y, t=None):
     clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1), n_estimators=25)
     #clf = AdaBoostClassifier(n_estimators=50)
     clf.fit(X,y)
@@ -35,9 +44,13 @@ def run_adaboost(X, y):
     scores = cross_val_score(clf, X, np.sign(y))
     yp = np.array([clf.predict(x)[0] for x in X])
     success = (yp == np.sign(y)).sum()/float(len(y))
-    return scores.mean(), success
+    if t is None: 
+        return scores.mean(), success
+    else:
+        yp = np.array([clf.predict(x)[0] for x in t])
+        return scores.mean(), success, yp
 
-def run_pca(X, y):
+def run_pca(X, y, t=None):
     # normalize data
     X = (X-np.mean(X,0))/np.std(X,0)
 
@@ -48,17 +61,24 @@ def run_pca(X, y):
     clf=clf.fit(X, np.sign(y), sample_weight=np.abs(y))
     yp = np.array([clf.predict(x)[0] for x in X])
     success = (yp == np.sign(y)).sum()/float(len(y))
-    
     scores = cross_val_score(clf, X, np.sign(y))
-    return scores.mean(), success
+    if t is None: 
+        return scores.mean(), success
+    else:
+        yp = np.array([clf.predict(x)[0] for x in t])
+        return scores.mean(), success, yp
 
-def run_naive_bayes(X,y):
+def run_naive_bayes(X,y,t=None):
     nb = MultinomialNB()
-    yp = nb.fit(X, np.sign(y)).predict(X)
+    fitted_nb = nb.fit(X, np.sign(y))
+    yp = fitted_nb.predict(X)
     success = (yp == np.sign(y)).sum()/float(len(y))
-    
     scores = cross_val_score(nb, X, np.sign(y))
-    return scores.mean(), success
+    if t is None: 
+        return scores.mean(), success
+    else:
+        yp = fitted_nb.predict(t)
+        return scores.mean(), success, yp
 
 ###################################################################
 ## Script starts below:

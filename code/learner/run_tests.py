@@ -6,7 +6,7 @@ import sys
 # construct algorithms
 algorithms = [run_svm, run_pca, run_adaboost, run_naive_bayes]
 
-create_features = 0
+create_features = 1
 features = []
 
 if create_features:

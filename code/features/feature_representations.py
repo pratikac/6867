@@ -43,6 +43,8 @@ class BaseFeatureExtractor(object):
         self.num_words = 0
         self.includeBigrams = False
 
+        self.t_data = None
+
     def readJSON(self, snippetFileName):
         self.snippetFileName = snippetFileName
 
