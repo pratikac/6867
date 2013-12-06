@@ -28,6 +28,7 @@ def run_svm(X, y, t=None):
 
 def run_decision_tree(X, y, t=None):
     clf = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=1, random_state=0)
+    clf.fit(X,np.sign(y))
     yp = np.array([clf.predict(x)[0] for x in X])
     sucess = (yp == np.sign(y)).sum()/float(len(y))
     if t is None: 
@@ -39,7 +40,7 @@ def run_decision_tree(X, y, t=None):
 def run_adaboost(X, y, t=None):
     clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1), n_estimators=25)
     #clf = AdaBoostClassifier(n_estimators=50)
-    clf.fit(X,y)
+    clf.fit(X,np.sign(y))
     
     scores = cross_val_score(clf, X, np.sign(y))
     yp = np.array([clf.predict(x)[0] for x in X])

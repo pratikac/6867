@@ -99,6 +99,10 @@ A Python based natural language processing library, \href{http://www.nltk.org}{N
 \subsection{Discussion}
 \label{ssec:discussion}
 
+The word clouds shown in Fig.~\ref{fig:pos_cloud} and Fig.~\ref{fig:neg_cloud} show the highest frequency words in data with positive and negative sentiments respectively. As a comical digression, let us talk briefly about the nature of words in these two sets. It is not surprising that words related to friends such as \emph{guy, friend} are overwhelmingly positive while most negative sentiments are characterized by people complaning about their significant others, e.g., \emph{boyfriend, girlfriend}. Surprisingly, \emph{sex} is often used in a negative connotation while \emph{school, work} are used to express positive sentiments. To conclude, it is fairly obvious that \emph{mom, dad} figure in the second picture.
+
+On a more serious note, a lot of words overlap in the two sets, i.e., a naive algorithm that uses a word dictionary to guess the sentiment is expected to perform very poorly. This will explain the poor performance of Decision Trees in Sec.~\ref{sec:results}.
+
 \begin{figure}[!htp]
 \centering
 \includegraphics[width= 0.8 \columnwidth]{fig/pos_cloud}
@@ -142,32 +146,53 @@ The vocabulary $W^*$, is then set of words with $n$ highest frequencies.
 
 \paragraph{Information Gain}
 \label{ssec:ig}
+Information gain is a criterion that quantifies the quality of a feature, i.e., it measures the information required for class prediction of a document based on the persence or absence of a feature. It can be calculated by the decrease in entropy of the data if the feature is included. The information of a set of documents, $D$ is simply,
+$$
+H(D) = -p_+ \log p_+ - p_- \log p_-
+$$
+where $p_+ = \PP(+ | d), p_- = \PP(- | d)$ for some arbitary document $d$. In our work, we compute this as $p_+ = \abs{D_+}/\abs{D}$ and similarly for $p_-$, where $D_+$ is the set of all documents tagged as $+$. For $n$-dimensional feature set $X$, we compute
+$$
+H(D_+ | w) = -\sum_{i=1}^n p_+(w) H(+ | w)
+$$
+To compute $H(+|w)$, we use $\PP(+ | w) = \PP(+, w)/ \PP(w)$ and 
+$$\PP(+, w) = \abs{\{ d: d \in D_+, w \in w_d \}}/\abs{D},$$ 
+$$\PP(w) = \abs{\{ d: d \in D, w \in w_d \}}/\abs{D}.$$
+Finally,
+$$
+IG(w) = H(D) - H(D_+ | w) - H(D_{-} | w).
+$$
 
 \paragraph{Gain Ratio}
 \label{ssec:gr}
 
+The Gain Ratio is an enhanced version of the Information Gain. It normalizes IG by the entropy of the word itself, i.e.,
+$$
+GR(w) = \frac{IG(w)}{H(w)}
+$$
+where $H(w)$ is computed using $p_w$ as described in the previous paragraph.
+
 \paragraph{TF-IDF}
 \label{ssec:tfidf}
-We also used an approach inspired from a popular method of constructing small vocabularies from a word corpus called ``term frequency-inverse document frequency''. The first term, i.e., term frequency is already computed in Sec.~\ref{ssec:wf}. Inverse document frequency is defined for a word $w \in W$ as
+We also used an approach inspired by a popular method of constructing small vocabularies from a word corpus called ``term frequency-inverse document frequency''. The first term, i.e., term frequency is already computed in Sec.~\ref{ssec:wf}. Inverse document frequency is defined for a word $w \in W$ as
 $$
-idf(w) = \log \left[ \frac{m}{\abs{\{i: w \in w_i \}}} \right].
+idf(w) = \log \left[ \frac{\abs{D}}{\abs{\{d: w \in w_d \}}} \right].
 $$
 The denominator here is the number of documents that a word $w$ appears in. Thus $idf$ penalises words which occur very frequently in documents. The vocabulary $W^*$ is constructed using the words with the highest value of the product $tf(w) * idf(w)$. In conventional TF-IDF formulations, each document has a large number of repeated words, e.g, research papers, which is not true in our case.
 
 We note that this approach gives the best performance for a number of algorithms tested in this report.
 
-\section{Preliminary results}
-\label{sec:prelim}
+\section{Results}
+\label{sec:results}
 
 This section uses the feature representation created in Sec.~\ref{sec:features} and shows an analysis of various algorithms and features on the data.
 For the algorithms discussed in this section, we used a popular Python library for machine learning called $\tt scikit\_learn$~\cite{scikit-learn}. This library has very efficient and well documented implementations of algorithms which makes it possible to evaluate the performance with different values of parameters. We analyse the data using four different algorithms as described below. Note that the parameters of these algorithms were tuned manually using $3$-fold cross-validation and we report the results using the best parameters for the various feature representations.
 
-\subsection{Support Vector Machine}
+\subsection{Support Vector Machine (SVM)}
 \label{ssec:svm}
 
-We use the standard SVM introduced in the class with regularization. The regularization parameter $C$ was chosen using cross-validation. Note that using a large value of $C$ is beneficial because the feature vectors are sparse binary strings, i.e., almost all of them are away from the origin.
+We use the standard SVM introduced in the class with regularization. The regularization parameter $C$ was chosen using cross-validation. Note that using a large value of $C$ is beneficial because the feature vectors are sparse binary strings, i.e., almost all of them are away from the origin. 
 
-\subsection{Principle Component Analysis}
+\subsection{Principle Component Analysis (PCA)}
 \label{ssec:pca}
 
 A few notes about our implementation are:
@@ -179,9 +204,11 @@ A few notes about our implementation are:
 \subsection{Adaboost}
 \label{ssec:adaboost}
 %
-Adaboost is a popular algorithm introduced by Freud and Schapire in~\cite{freund1999short}. The idea here is to fit a sequence of weak learners, e.g., one dimensional decision trees on slightly modified versions of the same data set. The predictions from all these weak learners (along with weights) are collected together to obtain the final classifier.
+Adaboost is a popular algorithm introduced by Freud and Schapire in~\cite{freund1999short}. The idea here is to fit a sequence of weak learners, e.g., one dimensional decision trees on slightly modified versions of the same data set. The predictions from all these weak learners (along with weights) are collected together to obtain the final classifier. The mathematical formulation and the algorithm is the same as what discussed in the class, in particular this algorithm uses an exponential loss function and uses it as an upper bound for the prediction error.
 
-\subsection{Naive Bayes classifer}
+In our work, we used Decision Trees with a depth of 1, i.e., one dimensional Decision Trees as weak learners in Adaboost. The number of weak learners was set to be 25 after checking a few different values to provide a good tradeoff between training time and prediction accuracy.
+
+\subsection{Naive Bayes classifer (NB)}
 \label{ssec:naive_bayes}
 %
 We are interested in calculating the probability of a label $+$ given all the words in a document, i.e., $\PP(+ \given w_1, \ldots, w_n)$. This can be written as,
@@ -193,37 +220,44 @@ The numerator is a product of the prior probability of a class $+$ and the likel
 $$
 \PP(+, w_1, \ldots, w_n) = \PP(+) \prod_{i=1}^n \PP(w_i \given +)
 $$
-i.e., the probabiltiy of generating a class $+$ from individual words $w_i$ is independent of some other word $w_j$. A classifier can be obtained easily from this argument by as
+i.e., the probabiltiy of generating a class $+$ from individual words $w_i$ is independent of some other word $w_j$. A classifier can be obtained easily from this argument as
 $$
 h(w_1, \ldots, w_n) = \arg \max_{c \in \{ +, - \} }\ \PP(c) \prod_{i=1}^n \PP(w_i \given c)
 $$
-
-In other words, it considers unigrams as independent of each other. Strictly speaking, this is not correct. As Fig.~\ref{fig:pos_cloud} and Fig.~\ref{fig:neg_cloud} show, there are quite a few common words in both data sets and a word like \emph{boyfriend} only shows a markedly different frequency in the two classes. However, for large amounts of data, this effect is less pronounced and we still obtain good classification.
+%
+In other words, it considers unigrams as independent to be each other. Strictly speaking, this is not correct. As Fig.~\ref{fig:pos_cloud} and Fig.~\ref{fig:neg_cloud} show, there are quite a few common words in both data sets and a word like \emph{boyfriend} only shows a markedly different frequency in the two classes. However, for large amounts of data, this effect is less pronounced and we still obtain good classification.
 
 \subsection{Discussion}
 \label{ssec:discussion}
 
-%\begin{table*}
-%\centering
-%\begin{tabular}{|c|c|c|}
-%\hline
-%A & B & C\\
-%\hline
-%1 & 2 & 3\\
-%\hline
-%\end{tabular}
-%\end{table*}
+Table~\ref{tab:feature_alg} shows the mean of $3$-fold cross-validation scores for various feature representations and different classifiers. A few remarks about these numbers are in order:
 
-\begin{table*}
+\begin{itemize}
+\item We have used a weighted version of SVM in our implementation, i.e, each data point is weighted by the confidence estimate
+\item Estimates for PCA are very close to those of SVM in spite of having a large reduction in the dimensionality. The number of dimensions in PCA is just 50 as compared to 200 in SVM.
+\item Gain Ratio seems to perform better than other approaches such as WF and TF-IDF. This is consistent with the numbers reported in literature.
+\item 
+\end{itemize}
+
+We note that the success ratio in every case is very large. It is surprising that this shows a marked dissimilarity to numbers reported in literature. In most papers, approaches that involve a combination of SVM and TFIDF show a success ratio of 0.82. In fact, this is precisely the kind of numbers that we get if we include only data from FML, LML and MLIG. If we include the data from the Twitter dataset, which is tagged manually, we get much higher prediction success. This can be attributed to the fact that upvotes and downvotes on these websites incorporate elements such as sarcasm, mockery etc. The scoring and confidence estimates that we compute from these are skewed do to this.
+
+\begin{figure}[H]
 \centering
+\vspace{0.1in}
 \begin{tabular}{ |c|c|c|c|c| }
   \hline
-  Feature & SVM & PCA & Adaboost & Naive Bayes \\[0.03in]
+  Feature & SVM & PCA & Adaboost & NB \\[0.03in]
   \hline
-  WF & 0.957 & 0.957 & 0.694 & 0.937\\
+  WF & 0.935 & 0.926 & 0.936 & 0.936\\
+  IG & 0.938 & 0.930 & 0.936 & 0.939\\
+  GR & 0.942 & 0.944 & 0.933 & 0.938\\
+  TF-IDF & 0.926 & 0.926 & 0.936 & 0.936\\
   \hline
 \end{tabular}
-\end{table*}
+\caption{3-fold cross validation success ratio estimates for different feature representations and algorithms}
+\label{tab:feature_alg}
+\end{figure}
+
 
 \section{Latent topics}
 \label{sec:latent}
