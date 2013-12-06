@@ -1,6 +1,7 @@
 import json
 import pylab as plt
 from mpl_toolkits.basemap import Basemap
+from numpy.random import rand
 
 
 
@@ -10,10 +11,9 @@ sentiment = []
 lattitude = []
 longitude = []
 
-
 with open(inputDataFile, 'r') as inputData:
     for line in inputData:
-        data_point = json.loads('line')
+        data_point = json.loads(line)
         sentiment.append(data_point['sentiment'])
         lattitude.append(data_point['lat'])
         longitude.append(data_point['long'])
@@ -30,10 +30,32 @@ m.drawcoastlines()
 m.drawstates()
 m.drawcountries()
 
-max_size = 80
-for dataPoint in range(len(sentiment)):
+numOriginals = len(sentiment)
+numDuplicates = 5
+duplicationRadius = 0.2
+latScale = 27/5.5
+longScale = 55/9.0
+lattitudeRange = max(lattitude) - min(lattitude)
+predictionAccuracy  = 0.9           # From scores obtained from cross-validation
+longitudeScaling = ()
+
+for dataPoint in xrange(numOriginals):
+    for i in xrange(numDuplicates):
+        newY = lattitude[dataPoint] + 2.0*(0.5 - rand())*duplicationRadius*longScale
+        newX = longitude[dataPoint] + 2.0*(0.5 - rand())*duplicationRadius*latScale
+        newSentiment = 2.0*(0.5 -int(rand() - predictionAccuracy > 0))*sentiment[dataPoint]
+
+        sentiment.append(newSentiment)
+        lattitude.append(newY)
+        longitude.append(newX)
+        
+print sentiment
+print len(lattitude)
+print len(sentiment)
+
+for dataPoint in xrange(len(sentiment)):
     x, y = m(longitude[dataPoint], lattitude[dataPoint])
-    m.scatter(x, y, 1, marker='o', color=colorFromSentiment(sentiment[dataPoint]))
+    m.scatter(x, y, 10, marker='o', color=colorFromSentiment(sentiment[dataPoint]))
 
 plt.savefig('map.pdf')
 
