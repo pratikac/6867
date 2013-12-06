@@ -311,6 +311,17 @@ The crux of this approach is that we cannot compare observations, i.e., words in
 \paragraph{Results}
 We bootstraped the data to perform cross-validation and computed the prediction error on a randomly sampled subset of the data. The size of the bootstrapped data is 0.7 times the original dataset and the size of the test data is 0.2 times that of the original dataset. We did this because computing the discriminative classifier is prohibitive for a large dataset. We obtain a success ratio of 0.874 for classifying positive samples and 0.96 for classifying negative samples. This is consistent with the fact that we set $\theta = 1.25$, we are more conservative while classifying a sentiment as positive.
 
+\section{Test Data}
+\label{sec:test_data}
+
+\begin{figure*}
+\centering
+\includegraphics[width=1.5 \columnwidth]{fig/map.pdf}
+\caption{Mood map of USA}
+\label{fig:map}
+\end{figure*}
+
+
 \section{Conclusions}
 \label{sec:conclusions}
 
