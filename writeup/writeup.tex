@@ -1,7 +1,7 @@
 \documentclass[11pt, letterpaper, conference, final, twocolumn]{ieeeconf}
 \IEEEoverridecommandlockouts
 \overrideIEEEmargins
-
+\usepackage{placeins}
 \input{macros.tex}
 
 % margins
@@ -16,15 +16,15 @@
 %\renewcommand{\margin}[2]{#1}
 \newcommand{\ignore}[1]{}
 
-% save space
-%\newcommand{\algsize}{\footnotesize}
-%\setlength{\floatsep}{0.05in}
-%\setlength{\textfloatsep}{0.1in}
-%\setlength{\intextsep}{0.05in}
-%\setlength{\belowcaptionskip}{0.01in}
-%\setlength{\abovecaptionskip}{0.1in}
-%\setlength{\abovedisplayskip}{0.08in}
-%\setlength{\belowdisplayskip}{0.08in}
+%% save space
+\newcommand{\algsize}{\footnotesize}
+\setlength{\floatsep}{0.05in}
+\setlength{\textfloatsep}{0.1in}
+\setlength{\intextsep}{0.05in}
+\setlength{\belowcaptionskip}{0.01in}
+\setlength{\abovecaptionskip}{0.1in}
+\setlength{\abovedisplayskip}{0.08in}
+\setlength{\belowdisplayskip}{0.08in}
 
 \begin{document}
 \title{\bf Twitter-based Mood Evaluation
@@ -36,7 +36,23 @@
 \maketitle
 
 \begin{abstract}
-\small{By providing a convenient, readily-accessible way to reach out to a global audience, Twitter has revolutionized the way we broadcast our feelings to the rest of the world. In this paper, we guess the mood of a tweet, i.e., we determinine `how positive people feel' at any given moment through an analysis of their tweets. To this end, we introduce a novel source of already classified text corpora for use as training data. Sites like \href{http://mylifeisg.com}{My Life Is G} and \href{http://fmylife.com}{FML} are a hiherto unutilized source of crowd-curated, well classified training data of text snippets of appropriate length. We study the relative efficacies of several commonly employed classification algorithms, including Support Vector Machines, Principle Component Analysis and Naive Bayes classifiers. We discuss a simple method that is motivated from the fact that both positive and negative tweets are generated from a set of latent topics and introduce a classifier that incorporates this information. Finally, we predict the mood of the nation as the deadline for this project submission draws near using geo-tagged tweets.}
+\small{By providing a convenient, readily-accessible way to reach out to a
+    global audience, Twitter has revolutionized the way we broadcast our
+    feelings to the rest of the world. In this paper, we guess the mood of a
+    tweet, i.e., we determinine `how positive people feel' at any given moment
+    through an analysis of their tweets. To this end, we introduce a novel
+    source of already classified text corpora for use as training data. Sites
+    like \href{http://mylifeisg.com}{My Life Is G} and
+    \href{http://fmylife.com}{FML} are a hiherto unutilized source of
+    crowd-curated, well classified training data of text snippets of
+    appropriate length. We study the relative efficacies of several commonly
+    employed classification algorithms, including SVM, PCA
+    and Naive Bayes classifiers. We discuss a
+    simple method that is motivated from the fact that both positive and
+    negative tweets are generated from a set of latent topics and introduce a
+    classifier that incorporates this information. Finally, we predict the mood
+    of the nation as the deadline for this project submission draws near using
+    geo-tagged tweets.}
 \end{abstract}
 
 \section{Introduction}
@@ -67,20 +83,20 @@ corpus of geo-coded tweets obtained from the Twitter analytics startup Topsy.
 \label{ssec:crawler}
 
 We used a variety of Python libraries to scrape data from user curated websites
-this contain well classified data tagged with sentiments.  \paragraph{MLIG}
-Web 3.0 has given birth to a popular website \href{http://mylifeisg.com}{MLIG}
+this contain well classified data tagged with sentiments.  \paragraph{MLIG} Web
+3.0 has given birth to a popular website \href{http://mylifeisg.com}{MLIG}
 which enables people to post short messages expressing how good their life at
 that particular moment. These documents are a perfect corpora for our purpose
 since they are tagged by sentiment. This website also enables other uses to
 rate the particular comment as ``average'' or ``meh'' (lame). We use this to
 compute a confidence level of the level of positivity for a document. We used
-another website called LML to obtain positively tagged documents. \pcm{This
-    website has been taken down since some time and we used an internet archive
-    to scrape data from it.}{fix} \paragraph{FML, LML} Similar to MLIG, there
-is a host of other websites like, \href{fmylife.com}{FML} and  that
-\paragraph{Twitter test data} We used the API for \href{topsy.com}{Topsy} to
-obtain 1000 geo-tagged tweets in the country. The policies of Topsy for a free
-account unfortunately limit us to this number.
+another website called LML to obtain positively tagged documents. This website
+has been taken down since some time and we used the Way Back Machine to scrape
+data from it. \paragraph{FML, LML} Similar to MLIG, there is a host of other
+websites like, \href{fmylife.com}{FML} and  that \paragraph{Twitter test data}
+We used the API for \href{topsy.com}{Topsy} to obtain 2000 geo-tagged tweets in
+the country. The policies of Topsy for a free account unfortunately limit us to
+this number.
 
 \subsection{Scoring and Confidence estimation}
 \label{ssec:scoring}
@@ -99,13 +115,10 @@ in the short term) and therefore, a snippet from fmylife.com with a negative
 score represents a positive sentiment.
 
 The score for each snippet is calculated from the numbers of upvotes and
-downvotes received by the snippet (on its source site) using Wilson's interval score
-%~\cite{miller_interval}. 
-This algorithm calculates the lower bound of one-sided interval within which we
-can claim (with a given confidence) that the true value of (positive
-votes)/(total votes) lies. One of the key assumptions involved in scoring the snippets this way is that `value' of one vote is the same across the different source sites. 
-
-The output of this step comprises two JSON files `positive.jl' and `negative.jl' that contain pre-processed positive and negative snippets respectively.
+downvotes received by the snippet (on its source site) using Wilson's interval
+score \cite{miller_interval}.  This algorithm calculates the lower bound of
+one-sided interval within which we can claim (with a given confidence) that the
+true value of (positive votes)/(total votes) lies. 
 
 \subsection{Tokenization}
 \label{ssec:tokenization}
@@ -326,13 +339,6 @@ The second last approximation is obtained as follows: We see that for a large $\
 %\PP(+ \given s) \sim \sum_{r \in R_+} y_r \exp \left(-C\ \gamma d(s,r) \right).
 %$$
 
-\begin{figure}
-\centering
-\includegraphics[width=\columnwidth]{fig/latent_topics}
-\caption{This figure shows the various classes of positive and negative sentiments and motivates the approximation made in Eqn.~\eqref{eq:latent_topic}.}
-\label{fig:latent_topics}
-\end{figure}
-
 The crux of this approach is that we cannot compare observations, i.e., words in documents to latent signals because we do not know them. Instead, we compare words to reference words in the traning data itself and obtain a simple rule for a discriminative classifier. Let $R(s) = \PP(+ \given s)/\PP(- \given s)$ and $\theta$ be a threshold. We classify the observation according to the function $f(s) = \trm{sign}(R(s) - \theta)$. It is clear that $\theta > 1$, set its value to $1.25$ because we would like make fewer mistakes while classifying a tweet as $+$, a funny example of where this was not done would be~\cite{target_pregnant}.
 
 \paragraph{Results}
@@ -346,6 +352,7 @@ We bootstraped the data to perform cross-validation and computed the prediction 
 \label{fig:map}
 \end{figure*}
 
+\FloatBarrier
 \section{Test Data}
 \label{sec:test_data}
 
@@ -355,7 +362,6 @@ Fig.~\ref{fig:map} shows the mood map of USA at about midnight of Thursday, Dec.
 %
 \item Southern California with a much warmer weather is noticably happier than San Francisco.
 }
-
 \section{Conclusions}
 This paper used novel data corpora from websites such as FML and MLIG that are pre-tagged with sentiment by users. We employ a number of feature representations on this dataset based on the word frequency, information ratio gain and TF-IDF to compare and constrast various supervised learning algorithms such as SVM, PCA-SVM, Adaboost and Naive Bayes classifier. We also introduced a model for tweets generated from hidden topics and a discriminative classifer to classify them. Finally, we incorporate live streaming data from Twitter to gauge the mood the country using the above sources as training data.
 \bibliography{writeup}
