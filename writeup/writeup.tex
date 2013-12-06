@@ -235,7 +235,8 @@ Table~\ref{tab:feature_alg} shows the mean of $3$-fold cross-validation scores f
 \begin{itemize}
 \item We have used a weighted version of SVM in our implementation, i.e, each data point is weighted by the confidence estimate
 \item Estimates for PCA are very close to those of SVM in spite of having a large reduction in the dimensionality. The number of dimensions in PCA is just 50 as compared to 200 in SVM.
-\item Adaboost 
+\item Gain Ratio seems to perform better than other approaches such as WF and TF-IDF. This is consistent with the numbers reported in literature.
+\item 
 \end{itemize}
 
 We note that the success ratio in every case is very large. It is surprising that this shows a marked dissimilarity to numbers reported in literature. In most papers, approaches that involve a combination of SVM and TFIDF show a success ratio of 0.82. In fact, this is precisely the kind of numbers that we get if we include only data from FML, LML and MLIG. If we include the data from the Twitter dataset, which is tagged manually, we get much higher prediction success. This can be attributed to the fact that upvotes and downvotes on these websites incorporate elements such as sarcasm, mockery etc. The scoring and confidence estimates that we compute from these are skewed do to this.
