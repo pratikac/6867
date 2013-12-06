@@ -51,6 +51,14 @@ In its recent IPO filing, Twitter disclosed to investors that it made a staggeri
 \subsection{Data crawler}
 \label{ssec:crawler}
 
+We used a variety of Python libraries to scrape data from certain websites which contain well classified data tagged with sentiments.
+\paragraph{MLIG}
+Web 3.0 has given birth to a popular website \href{http://mylifeisg.com}{MLIG} which enables people to post short messages expressing how good their life at that particular moment. These documents are a perfect corpora for our purpose since they are tagged by sentiment. This website also enables other uses to rate the particular comment as ``average'' or ``meh'' (lame). We use this to compute a confidence level of the level of positivity for a document. We used another website called LML to obtain positively tagged documents. \pcm{This website has been taken down since some time and we used an internet archive to scrape data from it.}{fix}
+\paragraph{FML, LML}
+Similar to MLIG, there is a host of other websites like, \href{fmylife.com}{FML} and  that 
+\paragraph{Twitter test data}
+We used the API for \href{topsy.com}{Topsy} to obtain 1000 geo-tagged tweets in the country. The policies of Topsy for a free account unfortunately limit us to this number.
+
 \subsection{Scoring and Confidence estimation}
 \label{ssec:scoring}
 
