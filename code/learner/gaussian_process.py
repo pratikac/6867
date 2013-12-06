@@ -84,17 +84,17 @@ class gaussian_process():
 def test():
     gp = gaussian_process(100, -1, 1)
     predictions = []
-    pf,nf,pl,nl = gp.bootstrap(0.05)
+    pf,nf,pl,nl = gp.bootstrap(0.1)
     print len(pf), len(nf)
     for fv in pf:
         t1 = gp.predict(fv)
         predictions.append(t1)
     tmp1 = np.array(predictions)
-    print 'pos_success: ', np.sum(np.where(tmp1 > 0))/float(len(predictions))
+    print 'pos_success: ', np.sum(tmp1[np.where(tmp1 > 0)])/float(len(predictions))
     
     predictions = []
     for fv in nf:
         t1 = gp.predict(fv)
         predictions.append(t1)
     tmp1 = np.array(predictions)
-    print 'neg_success: ', np.sum(np.where(tmp1 < 0))/float(len(predictions))
+    print 'neg_success: ', np.sum(tmp1[np.where(tmp1 < 0)])/float(len(predictions))
